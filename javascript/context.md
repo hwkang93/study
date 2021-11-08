@@ -1,5 +1,8 @@
 # JavaScript Execution Context
 
+## 전역 컨텍스트
+
+## 함수 컨텍스트
 
 
 
