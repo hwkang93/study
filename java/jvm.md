@@ -2,6 +2,12 @@
 
 자바 코드는 JRE 위에서 동작한다. JRE 는 자바 API 와 JVM 으로 구성되며, JVM 의 역할은 자바 애플리케이션을 클래스 로더(Class Loader)를 통해 읽어 자바 API 와 함께 실행하는 것이다.
 
+## JVM 의 역할
+
+1. 바이너리 코드를 읽는다.
+2. 바이너리 코드를 검증한다.
+3. 바이너리 코드를 실행한다.
+4. 실행 환경(Runtime Environment)의 규격을 제공한다.
 
 ## JVM 의 특징
 
@@ -95,7 +101,7 @@ JVM Stack 은 각 스레드마다 하나씩 존재하며 스레드가 시작될 
 
 **4. Heap**
 
-인스턴스 또는  객체를 저장하는 공간으로 가비지 컬렉션의 대상이다. JVM 성능 등의 이슈에서 가장 많이 언급되는 공간이다.
+인스턴스 또는  객체를 저장하는 공간으로 **가비지 컬렉션의 대상이다.** JVM 성능 등의 이슈에서 가장 많이 언급되는 공간이다.
 힙 구성 방식이나 가비지 컬렉션 방법 등은 JVM 벤더의 재량이다.
 
 **5. Method Area (= Code Area = Class Area)**
@@ -125,3 +131,5 @@ JVM Stack 은 각 스레드마다 하나씩 존재하며 스레드가 시작될 
 [NAVER D2 - JVM Internal](https://d2.naver.com/helloworld/1230)
 
 [aaron.log - JVM 구조와 작동 원리](https://velog.io/@hygoogi/JVM-%EA%B5%AC%EC%A1%B0%EC%99%80-%EC%9E%91%EB%8F%99-%EC%9B%90%EB%A6%AC)
+
+[history - JVM(Java Virtual Machine)에 대한 이해](https://swiftymind.tistory.com/78?category=738750)
