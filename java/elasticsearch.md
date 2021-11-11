@@ -5,6 +5,8 @@ Elasticsearch 는 방대한 양의 데이터를 신속하게, 거의 실시간(N
 
 Elasticsearch 는 검색을 위해 단독으로 사용되기도 하고 **ELK(Elasticsearch, Logstash, Kibana) 스택** 으로 사용되기도 한다.
 
+<br/><br/>
+
 ## ELK Stack
 
 - **Logstash**
@@ -16,21 +18,18 @@ Elasticsearch 는 검색을 위해 단독으로 사용되기도 하고 **ELK(Ela
 - **Kibana**
     Elasticsearch 의 빠른 검색을 통해 데이터를 시각화 및 모니터링
 
+<br/><br/>
+
 ## Elasticsearch Architecture
 
 <img src="https://raw.githubusercontent.com/exo-addons/exo-es-search/master/doc/images/image_05.png">
 
 (출처 : https://github.com/exo-archives/exo-es-search)
 
+> 클러스터 > 노드 > 인덱스 > 샤드(Lucene Index) > Segment
+
+
 <br/>
-
-클러스터 > 노드 > 인덱스 > 샤드(Lucene Index) > Index Segment(Inverted index)
-
-인덱스는 기본적으로 1초마다 새로고침된다.
-
-노드 간에 동기화되지 않아 검색자가 이력을 간략하게 조회할 수 있다.
-
--> Elasticsearch 는 **거의 실시간** 이지 실제로 실시간은 아니다.
 
 ### 클러스터 (Cluster)
 
@@ -38,14 +37,16 @@ Elasticsearch 는 검색을 위해 단독으로 사용되기도 하고 **ELK(Ela
 서로 다른 클러스터는 데이터의 접근, 교환을 할 수 없는 독립적인 시스템으로 유지되며,
 여러 대의 서버가 하나의 클러스터를 구성할 수 있고, 한 서버에 여러 개의 클러스터가 존재할 수도 있다.
 
+<br/>
 
 ### 노드 (Node)
 
 Elasticsearch 를 구성하는 하나의 단위 프로세스를 의미한다.
-노드는 역할에 따라 Master-eligible, Data, Ingest, Tribe 노드로 구분할 수 있다.
+**노드는 역할에 따라 Master-eligible, Data, Ingest, Tribe 노드로 구분할 수 있다.**
+
+<br/>
 
 #### Master-eligible node
-
 클러스터를 제어하는 마스터로 선택할 수 있는 노드를 말한다.
 
 **마스터 노드의 역할**
@@ -54,25 +55,24 @@ Elasticsearch 를 구성하는 하나의 단위 프로세스를 의미한다.
 - 데이터 입력 시 어느 샤드에 할당할 것인지 결정
 
 #### Data node
-
 데이터와 관련된 CRUD 작업과 관련있는 노드이다.
 CPU, 메모리 등 자원을 많이 소모하므로 모니터링이 필요하고, master 노드와 분리되는 것이 좋다.
 
 #### Ingest node
-
 데이터를 변환하는 등 사전 처리 파이프라인을 실행하는 역할을 한다.
 
 #### Coordination only node
-
 data noe 와 master-eligible node 의 일을 대신하는 이 노드는 대규모 클러스터에서 이점이 있다.
 로드벨런서와 비슷한 역할을 한다.
 
+<br/>
 
 ### 인덱스 (Index)
 
 Elasticsearch 에서 index 는 RDBMS 에서 database 와 대응하는 개념이다.
 또한 샤드(shard)와 복제(replica) 는 Elasticsearch 에만 존재하는 개념이 아니라, 분산 데이터베이스 시스템에도 존재하는 개념이다.
 
+<br/>
 
 ### 샤드 (Shard)
 
@@ -80,6 +80,7 @@ Sharding 은 데이터를 분산해서 저장하는 방법을 의미한다.
 즉 Elasticsearch 에서 스케일 아웃을 위해 index 를 여러 shard 로 쪼갠 것이다.
 기본적으로 1개 존재하며, 검색 성능 향상을 위해 클러스터의 샤드 개수를 조정하는 튜닝을 하기도 한다.
 
+<br/>
 
 ### 복제 (Replica)
 
@@ -87,7 +88,21 @@ Replica 는 또다른 형태의 Shard 라고 할 수 있다.
 노드를 손실했을 경우 데이터의 신뢰성을 위해 샤드들을 복제하는 것이다.
 따라서 replica 는 서로 다른 노드에 존재할 것을 권장한다.
 
+<br/>
 
+### 세그먼트 (Segment)
+
+Inverted Index, Doc Value, 원본 문서 등을 저장하고 있는 단위 파일이다.
+루씬은 Inverted index 를 하나의 거대한 파일이 아니라, 여러 개의 작은 파일 단위로 저장한다.
+
+**한번 생성된 세그먼트는 변경되지 않는다.(immutable)** 생성(insert)와 삭제(delete)만 있다.
+세그먼트가 문서를 삭제하게 되면, 실제로 스토리지에서 세그먼트를 삭제하는 것이 아니라, 삭제되었다는 상태만 표시하고 검색에서 제외하는 것이다.
+그 후 세그먼트 병합을 할 때 삭제된 문서(삭제되었다는 상태가 표시된 문서)를 제외한 문서들을 모아 새로운 세그먼트를 생성한다.
+
+세그먼트 병합은 비용이 큰 동작이다. 디스크 I/O 작업이고, 시스템이 느려지기 때문에 사용자가 적은 시간에 하는 것이 좋다.
+
+
+<br/><br/>
 
 ## Elasticsearch 의 특징
 
