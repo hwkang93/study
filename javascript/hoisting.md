@@ -35,14 +35,14 @@ let job = developer;
 ## const 상수와 let 변수의 Hoisting 에 대한 오해
 
 위의 예시 코드를 보면, ```let``` 과 ```const``` 키워드로 호출하고 선언한 경우 ```'variable' is not defined``` 라는 에러 메시지가 나온다.
-이를 보고 ```let``` 과 ```const``` 는 Hoisting 이 안된다고 생각하는 사람들이 조금은 있는 것 같다.
+이를 보고 ```let``` 과 ```const``` 는 Hoisting 이 안된다고 생각하는 사람들이 조금 있는 것 같다.
 하지만 ```var``` 과 마찬가지로 ```let``` , ```const``` 모두 Hoisting 이 되고 있는데 이에 대해 간단하게 정리하고자 한다.
 
 ### Temporal Dead Zone(TDZ) - 일시적 사각지대
 
 ```let``` 과 ```const``` 의 Hoisting 에 대해 이해하려면 Temporal Dead Zone 에 대한 이해가 필요하다.
 
-**Temporal Dead Zone (일시적 사각지대) 이란, 변수 스코프의 맨 위에서부터 변수의 초기화 완료 시점까지를 말한다.**
+먼저 **Temporal Dead Zone (일시적 사각지대) 이란, 변수 스코프의 맨 위에서부터 변수의 초기화 완료 시점까지를 말한다.**
 
 > Mozilla 에서는 Temporal Dead Zone 을 **시간상 사각지대** 라고 표현을 했다.
 > 여기서 **"시간상"** 사각지대로 표현한 이유는, 사각지대가 코드의 작성 순서(위치)가 아니라 코드의 실행 순서(시간)에 의해 형성되기 때문이라고 한다.
@@ -87,4 +87,5 @@ var getAge = function () {
 # 참고블로그
 
 [mozilla - Hoisting](https://developer.mozilla.org/ko/docs/Glossary/Hoisting)
+
 [mozilla - let](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/let)
