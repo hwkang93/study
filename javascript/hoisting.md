@@ -58,11 +58,6 @@ let job = developer;
 > 위의 코드에서 ```let``` 변수 선언 코드가 그 변수에 접근하는 함수보다 아래에 위치하지만 (```const func```),
 > 함수의 호출 시점이 사각지대 밖이므로 정상 동작한다.
 
-### var 변수의 TDZ
-
-
-
-
 
 ## Hoisting of Function
 
