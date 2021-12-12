@@ -1,2 +1,14 @@
 # study
-개발 이론 공부
+
+나만의 공부방
+
+## 목차
+
+
+
+
+
+
+HTTP
+ http status
+ http method -> put vs patch

@@ -56,13 +56,53 @@ Reachable 은 다시 네 가지로 세분화 할 수 있다.
 
 
 
+## GC 의 동작 방식
 
- 
+GC 는 Heap 영역에 있는 객체를 대상으로 동작한다.
+Heap 영역은 Young 영역과 Old 영역으로 나누어져 있고 각 영역은 서로 다른 메모리 구조로 되어 있기 때문에, 세부적인 동작 방식은 다르다.
+하지만 기본적으로 가비지 컬렉션이 실행된다고 하면 다음 두 가지 공통적인 단계를 따르게 된다.
+
+1. Stop The World
+2. Mark and Sweep
+
+> **Stop The World**
+> 
+> GC 를 하기 위해 GC 를 실행하는 쓰레드를 제외한 모든 쓰레드를 중지시키는 것을 말한다. GC 가 완료되면 작업이 재개된다.
+> 일반적으로 GC 의 성능 개선을 위해 튜닝을 한다고 하면 보통 Stop The World 의 시간을 줄이는 작업을 말한다.
+>
+> **Mark and Sweep**
+> - Mark : 사용되는 메모리와 사용되지 않는 메모리를 식별하는 작업
+> - Sweep : Mark 단계에서 사용되지 않음으로 식별된 메모리를 해제하는 작업
+>
+> Stop The World 를 통해 모든 작업이 중지되면, GC 는 스택의 모든 변수 또는 Reachable 객체를 스캔하면서 사용되고 있는 메모리인지 식별하는 작업을 하는데,
+> 이 과정을 Mark 라고 한다.
+> 이후에 Mark 되지 않은 객체들을 메모리에서 제거하는데, 이러한 과정을 Sweep 라고 한다.
+
+GC 는 크게 Young 영역에서 이루어지는 Minor GC 가 있고, Old 영역에서 이루어지는 Major GC 로 구분할 수 있다.
+
+### Minor GC
+
+Young 영역은 다시 1개의 Eden 영역과 2개의 Survivor 영역으로 나뉜다.
+- Eden 영역 : 새로 생성된 객체가 할당되는 영역
+- Survivor 영역 : 최소 한 번 이상의 Minor GC 에서 살아남은 객체가 존재하는 영역
+
+최초의 객체는 Eden 영역에 할당된다. 그리고 Eden 영역이 꽉 차게 되면 Survivor 영역 중 하나로 이동하는데, 모든 객체가 Survivor 영역으로 이동하는 것이 아니라
+Minor GC 를 진행하고 살아남은 객체만 Survivor 영역으로 이동한다. Minor GC 에서 살아남지 못한 객체의 메모리는 회수된다.
+
+객체의 생존 횟수를 카운트하기 위해 Minor GC 에서 살아남은 횟수를 의미하는 age 를 객체의 Object Header 에 기록한다.
+그리고 Minor GC 때 Object Header 에 기록된 age 를 보고 Old 영역으로의 Promotion 여부를 결정한다.
+
+Young 영역은 Old 영역에 비해 메모리 크기가 작기 때문에 보통 0.5초 ~ 1초 사이의 GC 시간을 가지며 GC 시간이 짧기 때문에 애플리케이션에 영향을 크게 미치지 않는다.
+
+### Major GC
+
+Young 영역에서 살아남은 객체들은 Old 영역으로 Promotion 된다. 그리고 Old 영역의 메모리가 부족해지면 Major GC 가 발생한다.
+Major GC 는 일반적으로 Minor GC 보다 10배 이상의 시간이 소요된다고 한다.
 
 
 
 
-## Garbage Collection 구현 방법
+## GC 구현 방법
 
 Garbage Collection 는 5가지 방법으로 구현이 가능하다.
 - Serial Garbage Collector
