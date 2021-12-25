@@ -43,6 +43,15 @@ public enum Color {
 }
 ```
 
+## Method
+
+Enum 에는 일반 메서드를 정의할 수 있다.
+
+
+또한, Interface 의 구현체가 될 수 있다.
+
+
+
 ## Reference
 
 [기록하는 개발자 - Java Enum 이란](https://honbabzone.com/java/java-enum/)
