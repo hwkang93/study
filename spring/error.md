@@ -50,3 +50,14 @@ public class A {
 ```
 
 [참조 Stack overflow](https://stackoverflow.com/questions/13564627/spring-aop-not-working-for-method-call-inside-another-method)
+
+
+## .jar 에 기본 Manifest 속성이 없습니다.
+
+jar 파일로 export 할 때 Runnable JAR file 을 선택하고 export 하면 됨
+
+## Eclipse 에서 스프링 부트 프로젝트 jar 로 말때는
+
+프로젝트 마우스 오른쪽 > run as > maven build... 클릭해서 들어간 후에
+
+package 입력 후 빌드하면 됨.
