@@ -51,12 +51,25 @@ Enum 에는 일반 메서드를 정의할 수 있다.
 또한, Interface 의 구현체가 될 수 있다.
 
 ```java
+public interface CodeMapper {
+    int getCode();
+    
+    String getName();
+}
+```
+
+```java
 public enum UserAuth implements CodeMapper {
     USER(01, "일반사용자"),
     ADMIN(99, "관리자");
     
     public int code;
     public String name;
+    
+    public UserAuth(int code, String name) {
+        this.code = code;
+        this.name = name;
+    }
     
     @Override
     public int getCode() {
@@ -70,11 +83,17 @@ public enum UserAuth implements CodeMapper {
 }
 ```
 
+```Lombok``` 라이브러리를 사용해 소스코드를 조금 더 줄일 수 있다.
+
 ```java
-public interface CodeMapper {
-    int getCode();
+@Getter
+@AllArgsConstuctor
+public enum UserAuth implements CodeMapper {
+    USER(01, "일반사용자"),
+    ADMIN(99, "관리자");
     
-    String getName();
+    public int code;
+    public String name;
 }
 ```
 
