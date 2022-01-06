@@ -2,7 +2,8 @@
 
 # Enum
 
-Enum 은 Java 1.5버전 부터 사용이 가능하다.
+Enum 상수의 집합을 의미한다.
+열거형 이라고도 부르며 Java 1.5버전 부터 사용이 가능하다.
 
 한정된 데이터 타입을 **Enumeration Type** 이라고 하며 열거 타입이라고 부른다.
 열거 타입은 열거 상수(Enumeration constant)를 가질 수 있다.
@@ -21,7 +22,9 @@ Enum 객체 자체는 Heap 영역에 생성된다.
 
 ## 추가 속성
 
-Enum 에는 추가 속성을 만들 수 있다.
+위에 선언한 ```Color``` 객체의 ```RED```, ```GREEN```, ```BLUE``` 는 차례대로 0, 1, 2 의 값이 설정된다.
+
+Enum 에는 추가 속성을 만들 수도 있다.
 
 ```java
 public enum Color {
@@ -43,12 +46,64 @@ public enum Color {
 }
 ```
 
+추가 타입을 Functional Interface 으로 설정할 수도 있다.
+
+```java
+public enum Calc {
+    PLUS((a, b) -> a + b),
+    MINUS((a, b) -> a - b);
+    
+    private BiFunction<Long, Long, Long> expression;
+    
+    public Calc(BiFunction<Long, Long, Long> expression) {
+        this.expression = expression;
+    }
+    
+    public long calculate(long a, long b) {
+        
+        return expression.apply(a,b);
+    }
+}
+```
+
+
 ## Method
 
-Enum 에는 일반 메서드를 정의할 수 있다.
+```enum``` 을 쓰면서 자주 사용했던 메소드들을 정리해보겠다.
+
+```java
+enum Auth {
+    ADMIN, USER;
+}
+```
+
+### name()
+
+Enum 상수 객체의 이름을 조회하는 메소드이다.
+
+```
+Auth admin = Auth.ADMIN;
+System.out.println(admin.name());
+//출력 : ADMIN
+```
+
+### values()
+
+```enum``` 의 스태틱 메소드이다.  ```enum``` 객체에 선언된 상수값을 배열 형태로 조회한다.
+
+```
+Auth[] auths = Auth.values();
+for (Auth value : auths) {
+    System.out.print(value.name() + " ");
+}
+//출력 : ADMIN USER
+```
 
 
-또한, Interface 의 구현체가 될 수 있다.
+
+### 일반 메서드 정의 , Interface 구현
+
+그리고 Enum 에는 일반 메서드를 정의할 수 있다. 또한, Interface 의 구현체가 될 수도 있다.
 
 ```java
 public interface CodeMapper {
@@ -96,6 +151,8 @@ public enum UserAuth implements CodeMapper {
     public String name;
 }
 ```
+
+
 
 ## Reference
 
