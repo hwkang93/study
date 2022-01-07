@@ -99,6 +99,14 @@ for (Auth value : auths) {
 //출력 : ADMIN USER
 ```
 
+### valueOf(String name)
+
+```enum``` 의 스태틱 메소드이다. 상수의 이름으로 해당 enum 객체를 조회한다. 
+조회 결과가 없을 경우 ```IllegalArgumentException``` 예외가 발생한다.
+
+```
+Auth admin = Auth.valueOf("ADMIN");
+```
 
 
 ### 일반 메서드 정의 , Interface 구현
@@ -147,11 +155,24 @@ public enum UserAuth implements CodeMapper {
     USER(01, "일반사용자"),
     ADMIN(99, "관리자");
     
-    public int code;
-    public String name;
+    private int code;
+    private String name;
 }
 ```
 
+## 언제 사용하는 게 좋을까?
+
+그럼 실제로는 언제 ```enum``` 객체를 사용하는 게 좋을까?
+
+거의 변하지 않는 값을 공통으로 만들어 사용해야 하는 경우
+
+개인적으로 ```enum``` 의 좋은 예는 ```org.springframework.http.HttpStatus``` 라고 생각한다.
+HTTP 상태 코드는 이미 코드별로 정의가 되어 있으며, 변할 일이 없기 때문이다. 
+
+
+
+
+항상 생각하지만 코딩에는 정답이 없다고 생각한다. Enum 도 마찬가지이다. 상황에 맞게 사용하는 게 중요하다고 생각한다.
 
 
 ## Reference
