@@ -25,12 +25,12 @@
 class PostTest {
     
     @Autowired
-	PostService postService;
+    PostService postService;
     
     @Test
     @DisplayName("이미 삭제된 게시글을 삭제하려고 시도하면 NotFoundException 이 발생한다.")
     void tryDeleteThatNotExistPost() {
-		long postId = 1;
+        long postId = 1;
         Post post = Post.builder()
             .postId(postId)
             .build();
@@ -57,9 +57,10 @@ class PostTest {
   > 2. 스프링 컨테이너 생성
   > 3. 테스트 메소드들 실행
 
+의 순서로 실행된다.
 
 
 ### @BeforeEach
 
 - 각각의 테스트 메소드 실행 전에 ```@BeforeEach``` 어노테이션이 붙은 메소드가 실행된다.
-- ```@BeforeAll``` 어노테이션과는 다르게 ```static``` 으로 선언하면 안된다.
+- ```@BeforeAll``` 어노테이션과는 다르게 ```static``` 으로 선언하지 않는다.
