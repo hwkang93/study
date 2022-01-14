@@ -61,3 +61,33 @@ jar 파일로 export 할 때 Runnable JAR file 을 선택하고 export 하면 �
 프로젝트 마우스 오른쪽 > run as > maven build... 클릭해서 들어간 후에
 
 package 입력 후 빌드하면 됨.
+
+
+## org.apache.log4j 로그 객체에 예외 내용 담기
+
+exception.printStackTrace() 는 로그 파일에 그 내용이 저장되지 않는다.
+
+보통 에러로그(StackTrace)가 출력될 때, Console 에는 기본적으로 출력이 되는 것이며, Console Appender 가 출력하는 것이 아니다.
+
+마찬가지로 File Appender 를 통해 File 에 따로 로그를 찍을때, printStackTrace 를 통해서 터져나온 에러가 파일에 저장되지 않는다.
+
+때문에, 로그 파일에 예외 내용을 저장하고 싶을 때에는 아래와 같이 표현해야 한다.
+
+```java
+
+public class ExceptionExample {
+    private final Logger log = Logger.getLogger(this.getClass());
+    
+    public void exceptionMethod() {
+        try {
+            throw new Exception();
+        } catch (Exception e) {
+            log.error("message", e);
+        }
+    }
+}
+```
+
+[참고블로그] (https://forgiveall.tistory.com/468)
+
+
