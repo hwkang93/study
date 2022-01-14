@@ -142,7 +142,7 @@ class GroupingTest {
                 })
                 .collect(Collectors.toList());
 
-		//group1 -> 4
+		//group1 -> UserList.size() = 4
 		UserGroup group1 = userGroupsList.stream()
 				.filter(userGroup -> userGroup.getGroupId().equals("group1"))
 				.findFirst()
@@ -150,7 +150,7 @@ class GroupingTest {
 
 		Assertions.assertThat(group1.getUserList().size()).isEqualTo(4);
 
-		//group2 -> 5
+		//group2 -> UserList.size() = 5
 		UserGroup group2 = userGroupsList.stream()
 				.filter(userGroup -> userGroup.getGroupId().equals("group2"))
 				.findFirst()
@@ -158,7 +158,7 @@ class GroupingTest {
 
 		Assertions.assertThat(group2.getUserList().size()).isEqualTo(5);
 
-		//group3 -> 4
+		//group3 -> UserList.size() = 4
 		UserGroup group3 = userGroupsList.stream()
 				.filter(userGroup -> userGroup.getGroupId().equals("group3"))
 				.findFirst()
@@ -166,7 +166,7 @@ class GroupingTest {
 
 		Assertions.assertThat(group3.getUserList().size()).isEqualTo(4);
 
-		//group4 -> 2
+		//group4 -> UserList.size() = 2
 		UserGroup group4 = userGroupsList.stream()
 				.filter(userGroup -> userGroup.getGroupId().equals("group4"))
 				.findFirst()
@@ -209,11 +209,11 @@ userResponseList.stream()
 })
 ```
 
-여기서 ```obj``` 는 ```Key = UserGroup , Value = List<UserResponse>``` 의 형태를 가진 객체로,
+여기서 ```obj``` 는 ```Key = UserGroup , value = List<UserResponse>``` 의 형태를 가진 객체로,
 
-```obj``` 의 ```value``` 즉, ```List<UserResponse>``` 객체를 ```User``` 객체로 변경한다.(toUser())
+```obj``` 의 ```value``` 즉, ```UserResponse``` 객체를 ```User``` 객체로 변경한다.(```toUser()```)
 
-그리고 ```UserGroup``` 객체에 ```userList``` 를 추가한다.
+그리고 ```UserGroup``` 객체에 ```userList``` 를 추가하고 리턴한다.
 
 <br/>
 
