@@ -34,9 +34,23 @@ API 관련 모듈을 만들던 중, Key 를 생성하는 ```ApiKeyGenerator``` �
 
 
 결과적으로 ```ApiKeyGenerator``` 클래스는 Spring Bean 객체로 변경하였다.
-Key 를 만들 때 다른 클래스의 값을 참조하는데 그 변수는 ```private final``` 로 선언된 변수이긴 하지만 
+Key 를 만들 때 변수를 하나 참조하는데 그 변수는 ```private final``` 로 선언된 변수이긴 하지만 
 그 변수의 참조값이 ```properties``` 파일에 정의되어 있으므로 외부 자원에 의존한다고 판단기 때문이다.
 
+```java
+@Component
+public class ApiKeyGenerator {
+    
+    @Value("${api.salt}")
+    private final String salt;
+    
+    public String createBy(final String email) {
+        //키 만드는 로직
+    }
+    
+    //...
+}
+```
 
 ```static``` 영역은 객체를 참조하는 형태가 아닌 직접 메소드를 실행하기 때문에 속도적인 장점이 있지만,
 ```heap``` 영역에 비해 메모리의 절대량이 작기 때문에 무분별한 사용은 지양해야 한다. 
