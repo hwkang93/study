@@ -23,9 +23,9 @@ public class A {
 
 이런 소스코드가 있다고 가정할 때, a() 내에서 실행되는 b() 는 Aspect 포인트컷에 걸리지 않는다.
 
-aspect 는 bean 을 둘러싼 프록시에 적용된다.
-bean 에 대한 참조를 얻을 때마다 실제로 구성에서 참조하는 클래스가 아니라, 관련 인터페이스를 구현하고 클래스에 위임하고 AOP와 같은 기능을 추가하는
-합성 클래스이다.
+**Aspect 는 bean 을 둘러싼 프록시에만 적용되기 때문이다.**
+
+> Bean 에 대한 참조를 얻을 때는, 실제로 작성된 클래스에서 참조를 하는 게 아니라 Spring 에서 생성한 Proxy 를 Bean 으로 등록한다.
 
 위의 예에서 b() 메소드가 다른 인스턴스 객체에서 호출될 경우 aspect 가 적용이 된다.
 혹은 b() 를 bean 객체로 만들어도 된다.
@@ -49,7 +49,7 @@ public class A {
 }
 ```
 
-[참조 Stack overflow](https://stackoverflow.com/questions/13564627/spring-aop-not-working-for-method-call-inside-another-method)
+[참고 Stack overflow](https://stackoverflow.com/questions/13564627/spring-aop-not-working-for-method-call-inside-another-method)
 
 
 ## .jar 에 기본 Manifest 속성이 없습니다.
@@ -88,6 +88,6 @@ public class ExceptionExample {
 }
 ```
 
-[참고블로그] (https://forgiveall.tistory.com/468)
+[참고블로그](https://forgiveall.tistory.com/468)
 
 
