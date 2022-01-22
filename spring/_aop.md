@@ -173,6 +173,9 @@ public class MethodInfoAopConfig {
 
 
 
+## 예시
+
+* 어노테이션은 인터페이스에 붙이면 안됨.
 
 
 
