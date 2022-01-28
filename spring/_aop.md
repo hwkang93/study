@@ -143,9 +143,105 @@ public class SpringAopApplication {
 
 이제 Spring AOP 에서 제공하는 어노테이션으로 예제 소스코드와 함께 알아보자.
 
+### 테스트를 위한 서비스 만들기
+
+AOP 테스트를 위해 간단한 테스트 및 서비스를 만들어보겠다.
+
+- **AopTest.java**
+
+```java
+package hwkang.study.springaop;
+
+@SpringBootTest
+public class AopTest {
+
+    @Autowired
+    UserService userService;
+
+    @Test
+    @DisplayName("사용자 아이디가 1인 사용자의 이름은 khw 이다")
+    void findUser() {
+        final long userId = 1L;
+
+        UserDto userDto = userService.findByUserId(userId);
+
+        assertThat(userDto.getUserName()).isEqualTo("khw");
+    }
+}
+```
+
+테스트를 성공시키기 위한 클래스들이 필요하다.
+```UserService.java``` , ```UserServiceImpl.java``` , ```UserDto.java``` 세 개의 클래스를 만들어준다.
+
+> 롬복 라이브러리를 사용해 소스코드를 간소화했다.
+
+- **UserDto.java**
+
+```java
+package hwkang.study.springaop.user.data;
+
+@Getter
+@AllArgsConstructor
+public class UserDto {
+    
+    //사용자 ID
+    private long userId;
+    
+    //사용자 명
+    private String userName;
+}
+```
+
+- **UserService.java**
+
+```java
+package hwkang.study.springaop.user.service;
+
+public interface UserService {
+
+    /**
+     * 사용자 아이디를 입력받아 결과 사용자 객체를 리턴한다.
+     * 
+     * @param userId
+     * @return UserDto
+     */
+    UserDto findByUserId(long userId);
+    
+}
+```
+
+- **UserServiceImpl.java**
+
+```java
+package hwkang.study.springaop.user.service;
+
+@Service
+public class UserServiceImpl implements UserService {
+
+    final List<UserDto> userList = Arrays.asList(
+            new UserDto(1, "khw"),
+            new UserDto(2, "chr"),
+            new UserDto(3, "kjh")
+    );
+
+    @Override
+    public UserDto findByUserId(long userId) {
+        return userList.stream()
+                .filter(userDto -> userDto.getUserId() == userId)
+                .findFirst()
+                .orElseThrow(() -> new NullPointerException());
+    }
+}
+```
+
+
+
+
 ### 메소드 실행 전 메소드 정보 로그로 출력하기
 
-먼저 Aop 설정 파일을 만들어준다.
+메소드 실행 전에 메소드 명을 출력하는 간단한 AOP 기능을 만들어보겠다.
+
+Aop 설정 파일을 만들어준다.
 메소드 정보를 출력하는 설정 파일이기 때문에 ```MethodInfoAopConfig``` 라는 클래스 명으로 만들었다.
 
 ```java
@@ -158,24 +254,145 @@ public class MethodInfoAopConfig {
     void before(JoinPoint joinPoint) {
         String methodName = joinPoint.getSignature().getName();
 
-        log.info(" [ " + methodName + " ] start");
+        log.info(" [ UserServiceImpl." + methodName + " ] start");
     }
 }
 ```
 
+```@Before``` 어노테이션을 사용하면 PointCut 이전에 특정 기능을 수행할 수 있다.
+위의 소스코드는 패키지 경로.UserServiceImpl 클래스 내의 모든 메소드(파라미터 타입, 리턴 타입 상관 없이) 실행 전에
+```before()``` 를 실행해 메소드 명을 로그로 표출하도록 명시하고 있다.
+
+
+위의 테스트를 실행시켜 보면 원하는 결과가 정상적으로 호출됨을 알 수 있다.
+
+```
+2022-01-28 09:57:00.922  INFO 1180 --- [    Test worker] hwkang.study.springaop.AopTest           : Starting AopTest using Java 17.0.2 on DESKTOP-V1ME5NQ with PID 1180 (started by KHW-IPC in C:\Users\KHW-IPC\IdeaProjects\spring-aop)
+2022-01-28 09:57:00.923  INFO 1180 --- [    Test worker] hwkang.study.springaop.AopTest           : No active profile set, falling back to default profiles: default
+2022-01-28 09:57:02.931  INFO 1180 --- [    Test worker] hwkang.study.springaop.AopTest           : Started AopTest in 2.299 seconds (JVM running for 3.584)
+2022-01-28 09:57:03.400  INFO 1180 --- [    Test worker] h.s.s.config.aop.MethodInfoAopConfig     :  [ UserServiceImpl.findByUserId ] start
+```
 
 ### 메소드 실행 후 에러가 발생했을 시 로그 쌓기 
 
+이번엔 메소드 실행 후 에러가 발생했을 경우 로그를 쌓는 기능을 추가했다.
 
+```java
+@Aspect
+@Configuration
+@Slf4j
+public class MethodInfoAopConfig {
+
+    //...
+
+    @AfterThrowing(
+            pointcut = "execution( * hwkang.study.springaop.user.service.UserServiceImpl.*(..))",
+            throwing = "exception"
+    )
+    void afterThrowing(JoinPoint joinPoint, Exception exception) {
+        String methodName = joinPoint.getSignature().getName();
+
+        if(exception instanceof NullPointerException) {
+            log.error(" [ " + methodName + " ] NullPointerException occurred.");
+        }
+        else {
+            log.error(" [ " + methodName + " ] etc Exception occurred.", exception.getMessage());
+        }
+    }
+}
+```
+
+```@AfterThrowing``` 어노테이션을 이용해 메소드에서 예외를 던지면 해당 AOP 기능을 수행한다. ```@Before``` 과 마찬가지고 Pointcut 을 명시하고
+추가로 예외 객체를 담을 ```throwing``` 을 명시해준다. ```throwing = "exception"``` 의 ```exception``` 은 
+메소드의 파라미터 중 예외 객체가 담길 파라미터의 명칭과 동일해야 한다.
+
+테스트를 위해 테스트 클래스에 메소드를 하나 추가한다.
+
+```java
+@SpringBootTest
+public class AopTest {
+
+    @Autowired
+    UserService userService;
+
+    //...
+    
+    @Test
+    @DisplayName("사용자가 없는 경우 NullPointerException 발생")
+    void throwNullPointerException() {
+
+        assertThrows(NullPointerException.class, () -> userService.findByUserId(4));
+    }
+}
+```
+
+테스트 결과는 다음과 같다.
+
+```
+2022-01-28 10:11:27.111  INFO 2044 --- [    Test worker] hwkang.study.springaop.AopTest           : Starting AopTest using Java 17.0.2 on DESKTOP-V1ME5NQ with PID 2044 (started by KHW-IPC in C:\Users\KHW-IPC\IdeaProjects\spring-aop)
+2022-01-28 10:11:27.112  INFO 2044 --- [    Test worker] hwkang.study.springaop.AopTest           : No active profile set, falling back to default profiles: default
+2022-01-28 10:11:28.870  INFO 2044 --- [    Test worker] hwkang.study.springaop.AopTest           : Started AopTest in 2.022 seconds (JVM running for 3.162)
+2022-01-28 10:11:29.372  INFO 2044 --- [    Test worker] h.s.s.config.aop.MethodInfoAopConfig     :  [ UserServiceImpl.findByUserId ] start
+2022-01-28 10:11:29.389 ERROR 2044 --- [    Test worker] h.s.s.config.aop.MethodInfoAopConfig     :  [ findByUserId ] NullPointerException occurred.
+```
+> 참고로 ```assertThrows``` 는 ```org.junit.jupiter.api``` 패키지의 ```Assertions``` 클래스이다.
+> static import 를 통해 클래스 명을 명시하지 않고 메소드명 만으로 호출이 가능하다.
+>
+> ex) ```import static org.junit.jupiter.api.Assertions.*;```
+>
+> 굳이 이렇게 하는 이유는, 테스트를 위해 사용하는 ```Assertions``` 클래스가 같은 이름으로 서로 다른 패키지에 두 개 있기 때문이다.
 
 
 ### 사용자 정의 어노테이션이 붙은 메소드의 경우 실행 시간 출력하기
 
+이번엔 어노테이션을 하나 생성하고, 그 어노테이션이 붙은 메소드의 실행 시간을 출력하는 예제를 만들어보겠다.
+
+먼저 어노테이션을 하나 만들어준다.
+
+```java
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface ExecutionTime {
+
+}
+```
+
+그리고 해당 어노테이션의 기능을 정의할 Config 클래스를 만들어준다. 
+
+```java
+@Aspect
+@Configuration
+@Slf4j
+public class ExecutionTimeAopConfig {
+
+    @Around("@annotation(hwkang.study.springaop.annotation.ExecutionTime)")
+    public Object around(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
+        MethodSignature methodSignature = (MethodSignature) proceedingJoinPoint.getSignature();
+
+        String className = methodSignature.getClass().getSimpleName();
+        String methodName = methodSignature.getMethod().getName();
+
+        StopWatch stopWatch = new StopWatch(className + "." + methodName);
+        stopWatch.start();
+        Object result = proceedingJoinPoint.proceed();
+        stopWatch.stop();
+
+        long executionTime = stopWatch.getTotalTimeMillis();
+
+        log.info(" [ " + stopWatch.getId() + " ] execution time is [ " + executionTime + " ] ms.");
+
+        return result;
+    }
+}
+```
+
+**"메소드 실행 전에 ```StopWatch``` 실행 -> 타겟 메소드 실행 -> ```StopWatch``` 종료 -> ```StopWatch``` 실행 시간 출력"**
+의 기능을 하는 메소드이다.
+
+여기서는 ```@Around``` 어노테이션을 사용했다. ```@Around``` 어노테이션은 
+메소드 실행 전과 후를 모두 제어할 수 있으며 결과값의 제어도 가능하다.
 
 
-## 예시
-
-* 어노테이션은 인터페이스에 붙이면 안됨.
 
 
 
