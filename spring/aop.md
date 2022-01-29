@@ -389,12 +389,52 @@ public class ExecutionTimeAopConfig {
 **"메소드 실행 전에 ```StopWatch``` 실행 -> 타겟 메소드 실행 -> ```StopWatch``` 종료 -> ```StopWatch``` 실행 시간 출력"**
 의 기능을 하는 메소드이다.
 
-여기서는 ```@Around``` 어노테이션을 사용했다. ```@Around``` 어노테이션은 
-메소드 실행 전과 후를 모두 제어할 수 있으며 결과값의 제어도 가능하다.
+여기서는 ```@Around``` 어노테이션을 사용했다. 
+```@Around``` 어노테이션은 메소드 실행 전과 후를 모두 제어할 수 있으며 결과값의 제어도 가능하다.
 
+그럼 만든 ```@ExecutionTime``` 어노테이션을 사용해보자.
 
+```java
+@Service
+public class UserServiceImpl implements UserService {
 
+    final List<UserDto> userList = Arrays.asList(
+            new UserDto(1, "khw"),
+            new UserDto(2, "chr"),
+            new UserDto(3, "kjh")
+    );
 
+    @Override
+    @ExecutionTime
+    public UserDto findByUserId(long userId) {
+        return userList.stream()
+                .filter(userDto -> userDto.getUserId() == userId)
+                .findFirst()
+                .orElseThrow(() -> new NullPointerException());
+    }
+}
+```
+
+사용법은 간단하다. 메소드에 해당 어노테이션만 추가해주면 된다.
+
+```
+2022-01-29 23:24:47.135  INFO 14952 --- [    Test worker] hwkang.study.springaop.AopTest           : Starting AopTest using Java 11.0.8 on DESKTOP-5H78H7R with PID 14952 (started by KHW in C:\Users\KHW\IdeaProjects\spring-aop)
+2022-01-29 23:24:47.136  INFO 14952 --- [    Test worker] hwkang.study.springaop.AopTest           : No active profile set, falling back to default profiles: default
+2022-01-29 23:24:48.710  INFO 14952 --- [    Test worker] hwkang.study.springaop.AopTest           : Started AopTest in 1.819 seconds (JVM running for 3.06)
+2022-01-29 23:24:49.114  INFO 14952 --- [    Test worker] h.s.s.config.aop.MethodInfoAopConfig     :  [ UserServiceImpl.findByUserId ] start
+2022-01-29 23:24:49.132  INFO 14952 --- [    Test worker] h.s.s.config.aop.ExecutionTimeAopConfig  :  [ MethodSignatureImpl.findByUserId ] execution time is [ 12 ] ms.
+```
+
+원하는 결과대로 잘 로그가 출려됨을 알 수 있다.
+
+## 마치며
+
+횡단 관심사를 구분하여 각각 모듈로 만들어 관리하는 것은 물론 좋은 발상이고, OOP 의 단점을 보완하는 좋은 프로그래밍 원칙이다.
+하지만 AOP 를 무분별하게 사용할 경우 핵심 비즈니스 로직의 관리도 힘들 뿐더러 디버깅도 어려워진다.
+
+물론 정답은 없겠지만, 관심사를 잘 나누고 적절한 위치에 적절한 프로그래밍 기법을 사용해 더 나은 프로그램을 만들도록 노력해야겠다.
+
+[예제 소스코드 (GitHub)](https://github.com/hwkang93/spring-aop)
 
 ## Reference
 
