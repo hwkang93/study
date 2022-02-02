@@ -54,10 +54,60 @@ primitive 타입을 Optional 로 사용하는 것은 권장하지 않는다.
 박싱, 언박싱을 두번씩 해야 하기 때문에 
 
 
-## Optional 객체 사용법
+## Optional 사용 예제
+
+들어가기 앞서 테스트를 위해 "학생" 클래스를 만들어주겠다. 
+학생 클래스는 이름, 나이, 동아리 필드를 가지고 있다.
+
+```java
+public class Student {
+    private String name;
+    private int age;
+    private Club club;
+
+    public Student(String name, int age, Club club) {
+        this.name = name;
+        this.age = age;
+        this.club = club;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public Club getClub() {
+        return club;
+    }
+}
+```
+
+동아리 클래스도 만들어주겠다. 동아리 클래스에는 동아리 명을 필드로 가진다.
+
+```java
+public class Club {
+    private String name;
+
+    public Club(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+}
+```
+
+### 
 
 
 
 ## Reference
 
 [더 자바, Java 8](https://www.inflearn.com/course/the-java-java8/dashboard)
+
+
+
