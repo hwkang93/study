@@ -101,9 +101,140 @@ public class Club {
 }
 ```
 
-### 
+테스트를 위한 메인 클래스를 만들고 테스트데이터를 메모리에 올린다.
 
+```java
+public class OptionalMain {
+    public static void main(String[] args) {
+        List<Student> students = Arrays.asList(
+                new Student("khw", 30, new Club("퍼즐 동아리")),
+                new Student("chr", 30, new Club("방탈출 동아리"))
+        );
+    }
+}
+```
 
+이제 Optional 에서 제공하는 API 들을 살펴보겠다. 
+
+### orElse
+
+먼저 orElse 메소드이다. orElse 는 optional 객체가 비어있을 경우(null) orElse 메소드 내에 있는 객체가 리턴된다.
+
+- **예제**
+```java
+public class OptionalMain {
+    public static void main(String[] args) {
+        // 생략
+
+        Optional<Student> startWithK = students.stream()
+                .filter(s -> s.getName().startWith("k"))
+                .findFirst();
+        
+        Student student = startWithK.orElse(createStudent());
+
+        System.out.println(student.getName());
+    }
+    
+    public static Student createStudent() {
+        System.out.println("Create Student.");
+        return new Student("default", 0, null);
+    }
+}
+```
+
+- **결과**
+
+```
+Create Student.
+khw
+```
+
+optional 객체가 비어있지 않더라도 orElse 메소드는 실행된다.
+
+- **예제**
+```java
+public class OptionalMain {
+    public static void main(String[] args) {
+        // 생략
+
+        Optional<Student> startWithH = students.stream()
+                .filter(s -> s.getName().startWith("h"))
+                .findFirst();
+        
+        Student student = startWithH.orElse(createStudent());
+
+        System.out.println(student.getName());
+    }
+    
+    public static Student createStudent() {
+        System.out.println("Create Student.");
+        return new Student("default", 0, null);
+    }
+}
+```
+
+- **결과**
+
+```
+Create Student.
+default
+```
+
+### orElseGet
+
+orElse 와 달리 Optional 객체가 비어있는 경우에만 실행되는 메소드이다. 
+orElseGet 은 파라미터로 Supplier 를 받는다.
+
+- **예제**
+
+```java
+public class OptionalMain {
+    public static void main(String[] args) {
+        // 생략
+
+        Optional<Student> startWithK = students.stream()
+                .filter(s -> s.getName().startWith("k"))
+                .findFirst();
+        
+        Student student1 = startWithK.orElseGet(OptionalMain::createStudent);
+        System.out.println(student1.getName());
+
+        Optional<Student> startWithH = students.stream()
+                .filter(s -> s.getName().startWith("h"))
+                .findFirst();
+
+        Student student2 = startWithH.orElseGet(OptionalMain::createStudent);
+        System.out.println(student2.getName());
+    }
+    
+    public static Student createStudent() {
+        System.out.println("Create Student.");
+        return new Student("default", 0, null);
+    }
+}
+```
+
+- **결과**
+
+```
+khw
+Create Student.
+default
+```
+
+상수로 디폴트 값이 정의되어 있는 경우에는 orElse 메소드를 사용하는 것이 더 적합하고,
+동적으로 판단해야 하는 경우에는 orElseGet 메소드를 사용하는 것이 더 적합하다.
+
+### orElseThrow
+
+객체가 비어있을 경우 예외를 리턴한다.
+기본값으로 ```RuntimeException``` 을 리턴하며, 파라미터로 다른 예외를 리턴할 수 있다.
+사용자 정의 예외도 리턴이 가능하다.
+
+### filter
+
+Optional 객체가 있다고 가정하고 필터링을 하는 메소드이다.
+Optional 객체가 리턴되며, 결과 값이 없을 경우에는 Empty Optional 객체가 리턴된다.
 
 ## Reference
 
