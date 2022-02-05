@@ -236,6 +236,18 @@ default
 Optional 객체가 있다고 가정하고 필터링을 하는 메소드이다.
 Optional 객체가 리턴되며, 결과 값이 없을 경우에는 Empty Optional 객체가 리턴된다.
 
+```java
+public class OptionalMain {
+    public static void main(String[] args) {
+        // 생략
+
+        Optional<Student> startWithK = students.stream()
+                .filter(s -> s.getName().startWith("k"));
+        
+    }
+}
+```
+
 ## Reference
 
 [더 자바, Java 8](https://www.inflearn.com/course/the-java-java8/dashboard)
