@@ -228,8 +228,32 @@ default
 ### orElseThrow
 
 객체가 비어있을 경우 예외를 리턴한다.
-기본값으로 ```RuntimeException``` 을 리턴하며, 파라미터로 다른 예외를 리턴할 수 있다.
+기본값으로 ```NoSuchElementException``` 을 리턴하며, 파라미터로 다른 예외를 리턴할 수 있다.
 사용자 정의 예외도 리턴이 가능하다.
+
+- **예제**
+
+```java
+public class OptionalMain {
+    public static void main(String[] args) {
+        //생략
+
+        Optional<Student> startWithL = students.stream()
+                .filter(s -> s.getName().startsWith("l"))
+                .findFirst();
+
+        Student student = startWithL.orElseThrow(() -> new IllegalArgumentException());
+
+        System.out.println(student.getName());
+    }
+}
+```
+
+- **결과**
+
+```
+Exception in thread "main" java.lang.IllegalArgumentException
+```
 
 ### filter
 
