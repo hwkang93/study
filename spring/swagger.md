@@ -14,10 +14,49 @@ UI 를 제공해줘서 편함
 
 Swagger API 는 어노테이션을 기반으로 기능을 구현한다.
 
+### @ApiOperation
 
+- API 를 정의하는 어노테이션
+- 제공 파라미터
+  - value : API 명칭
+  - notes : API 설명
+  - response : Response Type
+  - responseContainer : response 객체가 컨테이너 내에 있을 경우 작성 (List 등)
+- 예시
+```
+@ApiOperation(
+    value = "사용자 목록 조회",
+    notes = "사용자 전체 목록을 조회하는 기능입니다.",
+    response = UserDto.class,
+    responseContainer = "List"
+)
+```
 
-## 주요 어노테이션
+### @ApiImplicitParam
 
+- API 에서 사용하는 파라미터를 정의하는 어노테이션
+- 제공 파라미터
+  - name : 파라미터 명칭
+  - value : 파라미터 설명
+  - default value : 기본값
+  - dataType : 파라미터 타입
+  - required : 필수 여부
+- 예시
+```
+@ApiImplicitParam(name = "userId", value = "사용자 아이디", defaultValue = "1", dataType = "string", required = true)
+```
+
+### @ApiImplicitParams
+
+- ```@ApiImplicitParam``` 가 두개 이상일 때 사용
+- 예시
+
+```
+@ApiImplicitParams({
+        @ApiImplicitParam(name = "userName", value = "사용자 명", dataType = "string", paramType = "query", required = true),
+        @ApiImplicitParam(name = "age", value = "나이", dataType = "int", paramType = "query", required = true)
+})
+```
 
 
 ## 실습
