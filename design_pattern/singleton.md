@@ -27,7 +27,9 @@
 
 ## 싱글톤 패턴 구현 예제
 
-다음은 싱글톤 객체를 구현하는 가장 대표적인 방법이다. (Eager initialization)
+### Eager initialization
+
+다음은 사전 초기화 방식으로 싱글톤 객체를 구현하는 가장 대표적인 방법이다.
 
 ```java
 public class Singleton {
@@ -59,6 +61,96 @@ public class SingletonMain {
 }
 ```
 
+### Lazy initialization
+
+사전 초기화 방식으로 객체를 초기화하게되면, 어플리케이션이 시작되는 시점에 **모든 객체**가 메모리에 올라가게 된다.
+그렇게 되면 어플리케이션 기동 속도가 늦어지게 되고, 사용되지 않는 객체도 모두 메모리에 올라가기 때문에 메모리 사용을 비효율적으로 하게 되는데,
+이러한 문제점을 보완하기 위해 나온 방법이다.
+
+```java
+public class Singleton {
+    private static Singleton singleton;
+    
+    public static Singleton getInstance() {
+        if(singleton == null) {
+            return new Singleton();
+        }
+        
+        return singleton;
+    }
+
+
+    private Singleton() {}
+}
+```
+
+```getInstance()``` 메소드를 호출할 때 ```Singleton``` 객체가 있는 지 확인하고,
+만약 ```Singleton``` 객체가 최초 호출이면 새로운 ```Singleton``` 인스턴스를 생성하여 리턴하고
+호출한 적이 있으면 최초에 생성했던 ```Singleton``` 인스턴스를 리턴해주는 예제 소스코드이다.
+
+위의 예제는 큰 문제를 가지고 있는데, 바로 **Thread Safe 하지 않다**는 것이다. 
+멀티 쓰레드 환경에서 둘 이상의 사용자가 동시에 ```Singleton.getInstance()```메소드를 호출하는 경우 하나의 ```Singleton``` 인스턴스만 만들어진다는 보장이 없다.
+
+자바에서는 ```synchronized``` 라는 키워드를 제공하여 Thread Safe 를 가능하게 한다.
+
+> **Synchronized**
+> 
+> 여러 개의 쓰레드가 한 개의 자원을 사용하고자 할 때, 현재 데이터를 사용하고 있는 해당 스레드를 제외하고,
+> 나머지 쓰레드들은 해당 자원에 접근할 수 없도록 막는 개념.
+> 
+> 변수와 함수에 해당 키워드를 사용할 수 있으며, 내부적으로 Block, Unblock 을 처리해야 해서 성능 저하가 발생할 수 있다.
+
+```synchronized``` 키워드로 Thread Safe 하게 소스코드를 수정하면 아래와 같다.
+
+```java
+public class Singleton {
+    private static Singleton singleton;
+    
+    public static Singleton getInstance() {
+        if(singleton == null) {
+            synchronized (Singleton.class) {
+                if(singleton == null) {
+                    return new Singleton();
+                }
+            }
+        }
+        
+        return singleton;
+    }
+    
+    private Singleton() {}
+}
+```
+
+### Initialization on demand holder idiom
+
+Singleton 객체를 사전초기화하는 방법 중 성능이 좋다고 알려진 방법이다. 
+
+```java
+public class Singleton {
+    
+    private static Singleton getInstance() {
+        return SingletonHelper.INSTANCE;
+    }
+    
+    private Singleton() {}
+    
+    private static class SingletonHelper {
+        private static final Singleton INSTANCE = new Singleton();
+    }
+    
+}
+```
+
+이 방법은 JVM 의 클래스 로더의 특징을 살려 구현한 방법이다.
+
+> 자바는 컴파일 타임이 아닌, 런타임 시점에 클래스를 처음으로 참조할 때 해당 클래스를 로드하고 링크하는 특징을 가지고 있다.
+
+```private static class``` 클래스 내에 선언된 ```INSTANCE``` 는, ```getInstance()``` 메소드가 최초 호출되는 시점에 생성되며 
+JLS(Java Language Specification)에 의해 동기화가 보장된다.
+또한 추가적으로 조회되는 ```getInstance()``` 메소드에 대해서는 동기화 오버헤드를 발생시키지 않는다.  
+
+
 
 ## 싱글톤 패턴의 문제점
 
@@ -79,3 +171,7 @@ public class SingletonMain {
 ## Reference
 
 [나무위키 - 디자인 패턴](https://namu.wiki/w/%EB%94%94%EC%9E%90%EC%9D%B8%20%ED%8C%A8%ED%84%B4)
+
+[코딩팩토리 - 자바 - 동기화된 란? ~을?](https://coding-start.tistory.com/68)
+
+[나무위키 - Initialization-on-demand_holder_idiom](https://en.wikipedia.org/wiki/Initialization-on-demand_holder_idiom)
