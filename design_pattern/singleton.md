@@ -124,7 +124,7 @@ public class Singleton {
 
 ### Initialization on demand holder idiom
 
-Singleton 객체를 사전초기화하는 방법 중 성능이 좋다고 알려진 방법이다. 
+Singleton 객체를 사전초기화하는 방법 중 성능이 가장 좋다고 알려진 방법이다. 
 
 ```java
 public class Singleton {
@@ -146,7 +146,7 @@ public class Singleton {
 
 > 자바는 컴파일 타임이 아닌, 런타임 시점에 클래스를 처음으로 참조할 때 해당 클래스를 로드하고 링크하는 특징을 가지고 있다.
 
-```private static class``` 클래스 내에 선언된 ```INSTANCE``` 는, ```getInstance()``` 메소드가 최초 호출되는 시점에 생성되며 
+```private static``` 로 선언된 내부 클래스의 ```INSTANCE``` 인스턴스는 ```getInstance()``` 메소드가 최초 호출되는 시점에 생성되며 
 JLS(Java Language Specification)에 의해 동기화가 보장된다.
 또한 추가적으로 조회되는 ```getInstance()``` 메소드에 대해서는 동기화 오버헤드를 발생시키지 않는다.  
 
@@ -175,3 +175,5 @@ JLS(Java Language Specification)에 의해 동기화가 보장된다.
 [코딩팩토리 - 자바 - 동기화된 란? ~을?](https://coding-start.tistory.com/68)
 
 [나무위키 - Initialization-on-demand_holder_idiom](https://en.wikipedia.org/wiki/Initialization-on-demand_holder_idiom)
+
+http://literatejava.com/jvm/fastest-threadsafe-singleton-jvm/
