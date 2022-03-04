@@ -213,7 +213,7 @@ public interface UserService {
 
 테스트가 정상적으로 이루어지는지 확인한다.
 
-(Image)
+![](https://user-images.githubusercontent.com/49870384/156708910-93862eba-0935-446c-bb61-23f032d005d0.PNG)
 
 이제 Swagger 를 구현할 차례이다.
 어노테이션 기반으로 UI 가 생성되는데, 대부분의 어노테이션은 컨트롤러에 작성한다.
