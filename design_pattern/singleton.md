@@ -90,10 +90,11 @@ public class Singleton {
 
 위의 예제는 큰 문제를 가지고 있는데, 바로 **Thread Safe 하지 않다**는 것이다. 
 멀티 쓰레드 환경에서 둘 이상의 사용자가 동시에 ```Singleton.getInstance()```메소드를 호출하는 경우 하나의 ```Singleton``` 인스턴스만 만들어진다는 보장이 없다.
+(이중 객체 생성 문제)
 
-자바에서는 ```synchronized``` 라는 키워드를 제공하여 Thread Safe 를 가능하게 한다.
+자바에서는 ```synchronized``` 라는 키워드를 제공하여 이 문제를 해결할 수 있는 방법을 제공한다.
 
-> **Synchronized**
+> **Synchronized 란?**
 > 
 > 여러 개의 쓰레드가 한 개의 자원을 사용하고자 할 때, 현재 데이터를 사용하고 있는 해당 스레드를 제외하고,
 > 나머지 쓰레드들은 해당 자원에 접근할 수 없도록 막는 개념.
@@ -124,7 +125,8 @@ public class Singleton {
 
 ### Initialization on demand holder idiom
 
-Singleton 객체를 사전초기화하는 방법 중 성능이 좋다고 알려진 방법이다. 
+Singleton 객체를 사전초기화하는 방법 중 성능이 가장 좋다고 알려진 방법이다. 
+위의 ```synchronized``` 키워드를 사용한 예제와 마찬가지로 Thread Safe 를 보장한다.
 
 ```java
 public class Singleton {
@@ -146,13 +148,15 @@ public class Singleton {
 
 > 자바는 컴파일 타임이 아닌, 런타임 시점에 클래스를 처음으로 참조할 때 해당 클래스를 로드하고 링크하는 특징을 가지고 있다.
 
-```private static class``` 클래스 내에 선언된 ```INSTANCE``` 는, ```getInstance()``` 메소드가 최초 호출되는 시점에 생성되며 
+```private static``` 로 선언된 내부 클래스의 ```INSTANCE``` 인스턴스는 ```getInstance()``` 메소드가 최초 호출되는 시점에 생성되며 
 JLS(Java Language Specification)에 의해 동기화가 보장된다.
 또한 추가적으로 조회되는 ```getInstance()``` 메소드에 대해서는 동기화 오버헤드를 발생시키지 않는다.  
 
 
 
-## 싱글톤 패턴의 문제점
+## 싱글톤 패턴의 단점
+
+싱글톤 패턴도 여느 패턴과 마찬가지로 단점을 가지고 있다.
 
 1. 싱글톤 패턴을 구현하는 코드 자체가 많다.
 2. 의존관계상 클라이언트가 구체 클래스에 의존한다.
@@ -162,8 +166,12 @@ JLS(Java Language Specification)에 의해 동기화가 보장된다.
 
 > Java 의 스프링 프레임워크는 이러한 싱글톤 패턴의 문제점을 해결하여 객체를 싱글톤 패턴으로 구현된 Bean 으로 관리한다.
 
+## 마치며
 
-
+- Spring Framework 에서 왜 Bean 객체를 Singleton 으로 관리할까? 라는 궁금증에서 시작된 이번 글 작성은 정말 소중한 시간이었다.
+그리고 메모리 효율의 극대화를 위해 Spring 진영에서 얼마나 많은 고민과 노력을 했는지 느낄 수 있었다.
+- Singleton 패턴은 하나의 객체를 재사용함으로 메모리의 효율을 높일 수 있다는 분명한 장점이 있지만,
+  그에 못지 않게 단점도 뚜렷하고 객체 관리를 정말 조심히 해야 한다.
 
 
 
@@ -175,3 +183,5 @@ JLS(Java Language Specification)에 의해 동기화가 보장된다.
 [코딩팩토리 - 자바 - 동기화된 란? ~을?](https://coding-start.tistory.com/68)
 
 [나무위키 - Initialization-on-demand_holder_idiom](https://en.wikipedia.org/wiki/Initialization-on-demand_holder_idiom)
+
+[Literate Java - Fastest Thread-safe Singleton in Java](http://literatejava.com/jvm/fastest-threadsafe-singleton-jvm/)
