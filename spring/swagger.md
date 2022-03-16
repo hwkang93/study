@@ -25,7 +25,7 @@ Swagger API 는 어노테이션을 기반으로 기능을 구현한다.
 ### @ApiOperation
 
 - API 를 정의하는 어노테이션
-- 제공 파라미터
+- 주요 파라미터
   - value : API 명칭
   - notes : API 설명
   - response : Response Type
@@ -43,7 +43,7 @@ Swagger API 는 어노테이션을 기반으로 기능을 구현한다.
 ### @ApiImplicitParam
 
 - API 에서 사용하는 파라미터를 정의하는 어노테이션
-- 제공 파라미터
+- 주요 파라미터
   - name : 파라미터 명칭
   - value : 파라미터 설명
   - default value : 기본값
@@ -66,6 +66,32 @@ Swagger API 는 어노테이션을 기반으로 기능을 구현한다.
 })
 ```
 
+### @ApiModel
+
+- 모델 클래스에 대한 정의를 하는 어노테이션
+- ```ElementType.TYPE``` 을 타겟으로 함(클래스, 열거형, 인터페이스 등에 선언)
+- 주요 파라미터
+  - value : 클래스 명칭
+  - description : 설명
+
+### @ApiModelProperty
+
+- ```@ApiModel``` 어노테이션이 붙은 객체(클래스, 열거형, 인터페이스)에 선언된 필드에 정의하는 어노테이션
+- 예시
+```java
+@ApiModel(value = "사용자 정보", description = "사용자 정보 객체")
+public class UserDto {
+
+    @ApiModelProperty(value = "사용자 아이디")
+    private long userId;
+
+    @ApiModelProperty(value = "사용자 명")
+    private String userName;
+
+    @ApiModelProperty(value = "사용자 나이")
+    private int age;
+}
+```
 
 ## 실습
 
