@@ -180,8 +180,3 @@ MVC 패턴을 공부하며 오랜 시간동안 겪었을 과거의 많은 개발
 
 
 
-## Reference
-
-[[오픈소스를 이용한 시스템 통합] ③ 오픈소스 프레임.. - 마이다스](http://egloos.zum.com/mt1716/v/9291203)
-
-[우아한 테크 -MVC 패턴 리뷰- [레이어, MVC 패턴, 5레이어] - Murphy](https://murphymoon.tistory.com/entry/%EC%9A%B0%EC%95%84%ED%95%9C-%ED%85%8C%ED%81%AC-MVC-%EB%A6%AC%EB%B7%B0-%EB%A0%88%EC%9D%B4%EC%96%B4-MVC-%ED%8C%A8%ED%84%B4-5%EB%A0%88%EC%9D%B4%EC%96%B4)
