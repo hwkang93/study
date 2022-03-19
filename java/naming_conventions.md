@@ -43,7 +43,34 @@
 상수는 대문자로 작성한다.
 단어가 두 개 이상 있는 경우 _ 로 구분한다.
 
+## 정적 팩토리 메소드 (Static Factory Method) 명명규칙
+
+### from
+
+하나의 매개변수를 받아서 객체를 생성
+
+### of
+
+여러 개의 매개 변수를 받아서 객체를 생성
+
+### getInstance | instance
+
+인스턴스를 생성. 이전에 반환했던 것과 같을 수 있음. 기존에 생성된 인스턴스를 리턴한다.
+
+### newInstance | create
+
+새로운 타입의 인스턴스를 생성
+
+### get[OtherType]
+
+다른 타입의 인스턴스를 생성. 이전에 반환했던 것과 같을 수 있음.
+
+### new[OtherType]
+
+다른 타입의 새로운 인스턴스를 생성
+
 
 ## Reference
 
 [ORACLE - Naming Conventions](https://www.oracle.com/java/technologies/javase/codeconventions-namingconventions.html)
+[정적 팩토리 메서드(Static Factory Method)는 왜 사용할까?](https://tecoble.techcourse.co.kr/post/2020-05-26-static-factory-method/)
