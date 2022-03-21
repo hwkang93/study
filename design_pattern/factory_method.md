@@ -24,7 +24,7 @@
 
 ## 예시
 
-> [전체 소스코드 보러 가기]()
+> [전체 소스코드 보러 가기](https://github.com/hwkang93/study-sample-source/tree/main/design-pattern/src/factory_method)
 
 팩토리 메소드 패턴을 사용해 할인 쿠폰을 생성하는 방법을 예시로 들어보겠다.
 예시에서 사용할 할인 쿠폰은 배달 할인 쿠폰과 주문 할인 쿠폰 두 가지가 있고,
