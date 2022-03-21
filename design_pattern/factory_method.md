@@ -213,9 +213,10 @@ DELIVERY Coupon :: Coupon Name : 1주년 기념 배달비 1000원 할인 쿠폰 
 
 ## Effective Java 에서의 Static Factory Method
 
-위에서 설명한 Factory Method 패턴은 Effective JAVA 에서 나오는 Static Factory Method 와 목적이 다르다.
+Effective Java 가장 첫 번째 규칙이 Static Factory Method 를 고려하라는 것이다.
+위에서 설명한 Factory Method 패턴은 Effective JAVA 에서 나오는 Static Factory Method 와 **목적**이 다르다.
 둘 다 생성자를 대신 만들어주는 의미의 메소드로 Factory 를 사용하지만,
-Factory Method 패턴은 팩토리 메소드가 구현체 클래스의 결정을 하는 것을 목적으로 하고 있고,
+**Factory Method 패턴은 팩토리 메소드가 구현체 클래스의 결정을 하는 것을 목적으로 하고 있고**,
 Effective JAVA 에서의 Static Factory Method 는 new 키워드로 객체를 생성하는 것이 아닌, static 메소드를 활용해 객체를 생성하는 것을 목적으로 하고 있다.
 (Effective JAVA 책을 다시 읽어보니 Factory Method 패턴과는 다른 개념이라고 설명 돼있었다.)
 
