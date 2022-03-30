@@ -2,28 +2,28 @@
 
 객체의 행위를 클래스로 만들어 캡슐화하는 패턴
 
+객체의 행위 자체를 캡슐화(Command)하여 호출자 클래스(Invoker) 와 행위 구현 클래스(Receiver) 사이의 의존성을 제거한다.
 
+## Command 패턴 구성 요소
 
-- Invoker
+- **Invoker**
   - 기능의 실행을 요청하는 호출자 클래스
-
-
-- Receiver
-  - ConcreteCommand 에서 정의한 기능을 실행하기 위해 사용되는 클래스
-
   
-- Command
+- **Receiver**
+  - ConcreteCommand 에서 정의한 기능을 실행하기 위해 사용되는 클래스
+  
+- **Client**
+  - 어느 시점에 어떤 명령을 수행할 지 결정
+  - 명령을 수행하기 위해 invoker 에 command 를 전달하고 수행
+  
+- **Command**
   - 실행될 기능의 오퍼레이션을 정의하는 인터페이스
-
-
-- ConcreteCommand
+  
+- **ConcreteCommand**
   - 기능을 정의하는 클래스
   - Command 인터페이스의 구현체
 
 
-- Client
-  - 어느 시점에 어떤 명령을 수행할 지 결정
-  - 명령을 수행하기 위해 invoker 에 command 를 전달하고 수행
 
 ## 장단점
 
@@ -45,6 +45,11 @@
 - ```java.lang.Runnable```
 
 - ```javax.swing.Action```
+
+> **TODO**
+> 
+> 커멘드 패턴을 사용하면 Queue 사용하는 데 좋다고 하는데, 왜 좋은지 설명이 없음 ㅜㅜ...
+> 찾아보고 정리하기.
 
 ## Reference
 
