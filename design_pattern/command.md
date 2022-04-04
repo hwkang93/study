@@ -47,6 +47,93 @@
 
 > 실제로 커맨드 패턴을 사용해 기능을 구현하는 일이 생기면 예제를 수정해야겠다.
 
+블루투스 스피커와 전등과, 그 둘을 켜고 끄는 리모컨을 예제로 들어보겠다. 
+
+### Receiver
+
+실제로 수행될 기능이 정의된 클래스이다.
+여기서는 블루투스 스피커와 전등이 Receiver 이다.
+
+```BlueToothSpeaker.java```
+
+```java
+public class BlueToothSpeaker {
+    private String location;
+
+    public BlueToothSpeaker(String location) {
+        this.location = location;
+    }
+
+    public void on() {
+        System.out.println(location + "의 블루투스 스피커가 켜졌습니다.");
+    }
+
+    public void connectWithPhone() {
+        System.out.println("휴대폰과 연결합니다.");
+    }
+
+    public void playingMusic() {
+        System.out.println("음악을 켭니다.");
+    }
+
+    public void off() {
+        System.out.println(location + "의 블루투스 스피커가 꺼졌습니다.");
+    }
+}
+```
+
+```Light.java```
+
+```java
+public class Light {
+    private String location;
+
+    public Light(String feature) {
+        this.location = feature;
+    }
+
+    public void on() {
+        System.out.println(location + "의 전등이 켜졌습니다.");
+    }
+
+    public void off() {
+        System.out.println(location + "의 전등이 꺼졌습니다.");
+    }
+}
+```
+
+### Command
+
+Command Interface 를 만들어 명령에 필요한 책임들을 설정한다.
+
+```Command.java```
+
+```java
+public interface Command {
+
+    /**
+     * 명령을 실행한다.
+     */
+    void execute();
+
+    /**
+     * 이전 명령을 다시 실행한다.
+     */
+    void undo();
+}
+```
+
+## ConcreteCommand
+
+Command Interface 의 구현체이다.
+예제에서는,
+- 블루투스 스피커를 켜는 커멘드 구현체
+- 블루투스 스피커를 끄는 커멘드 구현체
+- 전등을 켜는 커멘드 구현체
+- 전등을 끄는 커멘드 구현체
+- 초기화를 위해 아무 기능도 들어있지 않은 커멘드 구현체
+
+5가지로 구분하였다.
 
 
 
