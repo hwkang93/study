@@ -131,10 +131,150 @@ Command Interface 의 구현체이다.
 - 블루투스 스피커를 끄는 커멘드 구현체
 - 전등을 켜는 커멘드 구현체
 - 전등을 끄는 커멘드 구현체
+- 클라이언트가 원하는 커멘드들을 설정하면 연속으로 알아서 설정해주는 커멘드 구현체
 - 초기화를 위해 아무 기능도 들어있지 않은 커멘드 구현체
 
-5가지로 구분하였다.
+6가지로 구분하였다.
 
+```SpeakerOnCommand.java```
+
+```java
+public class SpeakerOnCommand implements Command {
+
+    private BlueToothSpeaker blueToothSpeaker;
+
+    public SpeakerOnCommand(BlueToothSpeaker blueToothSpeaker) {
+        this.blueToothSpeaker = blueToothSpeaker;
+    }
+
+    @Override
+    public void execute() {
+        blueToothSpeaker.on();
+        blueToothSpeaker.connectWithPhone();
+        blueToothSpeaker.playingMusic();
+    }
+
+    @Override
+    public void undo() {
+        blueToothSpeaker.off();
+    }
+}
+```
+
+```SpeakerOffCommand.java```
+
+```java
+public class SpeakerOffCommand implements Command {
+
+    private BlueToothSpeaker blueToothSpeaker;
+
+    public SpeakerOffCommand(BlueToothSpeaker blueToothSpeaker) {
+        this.blueToothSpeaker = blueToothSpeaker;
+    }
+
+    @Override
+    public void execute() {
+        blueToothSpeaker.off();
+    }
+
+    @Override
+    public void undo() {
+        blueToothSpeaker.on();
+        blueToothSpeaker.connectWithPhone();
+        blueToothSpeaker.playingMusic();
+    }
+}
+```
+
+```LightOnCommand.java```
+
+```java
+public class LightOnCommand implements Command{
+
+    private Light light;
+
+    public LightOnCommand(Light light) {
+        this.light = light;
+    }
+
+    @Override
+    public void execute() {
+        light.on();
+    }
+
+    @Override
+    public void undo() {
+        light.off();
+    }
+}
+```
+
+```LightOffCommand.java```
+
+```java
+public class LightOffCommand implements Command{
+
+    private Light light;
+
+    public LightOffCommand(Light light) {
+        this.light = light;
+    }
+
+    @Override
+    public void execute() {
+        light.off();
+    }
+
+    @Override
+    public void undo() {
+        light.on();
+    }
+}
+```
+
+```MacroCommand.java```
+
+```java
+public class MacroCommand implements Command{
+  private Command[] commands;
+
+  public MacroCommand(Command... commands) {
+    this.commands = commands;
+  }
+
+  @Override
+  public void execute() {
+    for(Command command : commands) {
+      command.execute();
+    }
+  }
+
+  @Override
+  public void undo() {
+    for(Command command : commands) {
+      command.undo();
+    }
+  }
+}
+```
+
+
+```NoCommand.java```
+
+```java
+public class NoCommand implements Command{
+
+    @Override
+    public void execute() {
+
+    }
+
+    @Override
+    public void undo() {
+
+    }
+}
+```
 
 
 ## 커멘드 패턴을 사용하는 패키지
