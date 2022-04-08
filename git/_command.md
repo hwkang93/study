@@ -16,6 +16,8 @@ got lig
 
 ```git add [파일 / 디렉토리 경로]```
 
+```git add .```
+
 > git add -A : 모든 변경 내용을 스테이지에 올림
 
 - **커밋**
@@ -31,3 +33,6 @@ got lig
 
 ```git checkout [브랜치 명]```
 
+- **unstaged 영역 변경사항 확인**
+
+```git diff```
