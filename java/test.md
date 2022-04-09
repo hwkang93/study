@@ -2,18 +2,26 @@
 >
 > 새로 알게 된 내용은 틈틈이 추가할 예정
 
+### @SpringBootTest
 
-
+- SpringBoot 어플리케이션의 테스트를 진행하기 위해 사용하는 어노테이션
+- ```@SpringBootTest``` 에 사용 가능한 옵션
+  - webEnvironment
+    - RANDOM_PORT : WebApplicationContext 를 생성하고, port 는 0으로 설정함
+    - DEFINED_PORT : WebApplicationContext 를 생성하고 어플리케이션에서 정의한 포트로 설정함
+    - NONE : WebApplicationContext 를 생성하고 어플리케이션 타입을 NONE 으로 설정함
+    - MOCK : Mock Servlet 환경으로 WebApplicationContext 생성
+  
 ### @TestMethodOrder
 
 - 테스트 메소드들의 순서를 정의할 수 있는 기능을 제공하는 어노테이션
 - 클래스에 붙임
 - ```@TestMethodOrder``` 에 사용 가능한 옵션
     - MethodName : 메소드 명칭 순서대로 진행
-    - DisplayName : 테스트 메소드에 붙은```@DisplayName``` 어노테이션 순서대로 정렬
+    - ~~DisplayName~~ : 테스트 메소드에 붙은```@DisplayName``` 어노테이션 순서대로 정렬
+  > Junit 버전이 올라가면서 사라진 듯
     - OrderAnnotation : 테스트 메소드에 붙은 ```@Order``` 어노테이션 순서대로 정렬
     - Random : 랜덤으로 결정
-
 
 
 ### @DisplayName
