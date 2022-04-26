@@ -11,6 +11,7 @@ $ docker version
 
 ```
 $ docker system info
+$ docker info
 ```
 
 - docker disk 이용 상황
@@ -40,6 +41,7 @@ $ docker image ls -q        -> docker id 만 표시
 
 ```
 $ docker image inspect [이미지명/이미지 아이디]
+$ docker inpect [이미지명/이미지 아이디] | grep "검색어"     -> 검색어가 포함된 상세 정보만 조회
 ```
 
 - docker 이미지 다운로드
@@ -93,7 +95,13 @@ $ docker container ls -a    -> 실행중이지 않은 목록도 함께 조회
 $ docker container ps -a    -> 실행중이지 않은 목록도 함께 조회
 ```
 
-- docker 컨테이너 상세 조회(CPU, 메모리 사용량 등)
+- docker 컨테이너 상세 조회
+
+```
+$ docker container inspect [컨테이너명/컨테이너 아이디]
+```
+
+- docker 컨테이너 사용 조회(CPU, 메모리 사용량 등)
 
 ```
 $ docker container stats
