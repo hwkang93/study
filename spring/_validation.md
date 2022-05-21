@@ -1,23 +1,26 @@
 # Spring Validation
 
 클라이언트에서도 서버로 보낼 데이터들의 유효성을 검사하겠지만, 안전한 통신을 위해서는 서버에서도 데이터의 유효성을 검증할 필요가 있다.
+JAVA 에서는 기본적으로 
 
 @Valid
 
 - JAVA 표준 유효성 검증 어노테이션
 - DispatcherServlet > ArgumentResolver 에서 유효성 검증이 진행된다.
-
+- 유효성 검증이 실패하면 MethodArgumentNotValidException 예외가 발생하며 400 코드를 리턴한다.
+- 이 요청은 컨트롤러로 진입하기 전에 프론트 컨트롤러에서 발생한 에러이므로 서버 에러코드(500)를 리턴하지 않는다.
 
 @Validated
 
 - Spring Framework 에서 제공하는 유효성 검증 어노테이션
 - AOP 를 기반으로 유효성 검증이 진행된다.
+- 유효성 검증이 실패하면 ConstraintViolationException 예외가 발생하며 별다른 처리가 없을 시 500 코드를 리턴한다.
+- 이 요청은 AOP 를 기반으로 메소드 호출 전에 유효성 검증 메소드에서 에러가 발생한 것이므로 서버 에러코드를 리턴한다.
+
+## 예제
 
 
-예제
-
-
-
+메시지 처리
 
 
 ## Reference
