@@ -5,13 +5,26 @@
 @Valid
 
 - JAVA 표준 유효성 검증 어노테이션
+- 제약 조건이 부여된 객체에 Bean Validator 를 이용해서 검증하도록 지시한다.
+- Bean Validator 의 대표적인 구현체로 Hibernate Validator 가 있다.
+  - 스프링부트에서 디폴트 구현체로 사용된다.
 - DispatcherServlet > ArgumentResolver 에서 유효성 검증이 진행된다.
-
+- 프론트 컨트롤러인 DispatcherServlet 에서 유효성을 검증하기 때문에 예외가 발생하면 400 에러를 리턴한다. (MethodArgumentNotValidException)
+- 위와 같은 이유로 @Valid 는 컨트롤러에서만 동작한다.
 
 @Validated
 
 - Spring Framework 에서 제공하는 유효성 검증 어노테이션
 - AOP 를 기반으로 유효성 검증이 진행된다.
+- 예외 발생 시 500 에러가 발생한다. (ConstraintViolationException)
+- 컨트롤러 이외의 다른 계층에서 사용이 가능하다.
+
+
+
+## 주의할 점
+
+유효성 검사는 꼭 필요한 계층에서 꼭 필요한 데이터만으로 검증을 진행해야 한다.
+검증 자체에 리소스가 소모되기 때문에 어플리케이션의 성능에 영향을
 
 
 ## 예제
