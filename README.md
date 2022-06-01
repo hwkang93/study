@@ -20,6 +20,8 @@
 - [PostgreSQL 시퀀스 관리하기](https://github.com/hwkang93/study/blob/main/database/postgresql_sequence.md)
 - [트랜잭션(Transaction)](https://github.com/hwkang93/study/blob/main/database/transaction.md)
 
+
+
 ### 깃
 
 - Command
