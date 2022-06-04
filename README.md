@@ -35,8 +35,25 @@
 
 - HTTP
 - HTTP Methods
+- REST
 
 ### Java
+
+- [Getter 와 Setter 에 관하여](https://github.com/hwkang93/study/blob/main/java/_about_getter_and_setter.md)
+- [Elastic Search](https://github.com/hwkang93/study/blob/main/java/elasticsearch.md)
+- [객체 Grouping 하기 (feat Stream API)](https://github.com/hwkang93/study/blob/main/java/entity_grouping.md)
+- [Enum](https://github.com/hwkang93/study/blob/main/java/enum.md)
+- [Exception 정리](https://github.com/hwkang93/study/blob/main/java/exception.md)
+- [Function vs Method](https://github.com/hwkang93/study/blob/main/java/function_vs_method.md)
+- [JVM](https://github.com/hwkang93/study/blob/main/java/jvm.md)
+- [자바 명명규칙](https://github.com/hwkang93/study/blob/main/java/naming_conventions.md)
+- [객체 배열 정렬](https://github.com/hwkang93/study/blob/main/java/object_sort.md)
+- [객체지향 프로그래밍 5대 원칙(SOLID)](https://github.com/hwkang93/study/blob/main/java/oop.md)
+- [Optional](https://github.com/hwkang93/study/blob/main/java/oop.md)
+- [Public Interface](https://github.com/hwkang93/study/blob/main/java/public_interface.md)
+- [Static Class vs Spring Bean](https://github.com/hwkang93/study/blob/main/java/static_vs_bean.md)
+- [Test](https://github.com/hwkang93/study/blob/main/java/test.md)
+
 
 ### Spring
 
