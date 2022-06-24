@@ -1,10 +1,22 @@
 # Spring Validation
 
 > 현재 운영하는 API 서버의 유효성 검증이, 서비스 레이어에서 이루어지고 있었다.
+> 이는 올바르던, 올바르지 않던 모든 요청은 결국 서버에 도착하고 대규모 트래픽이 발생할 경우 위험한 상황이 발생할 수 있다는 것이다.
+> 
+> 하지만 이미 서버는 운영 중이고 소스코드의 대규모 업데이트를 진행하게 되면, 오프라인으로 API 모듈을 사용하고 있는 다른 프로젝트에도
+> 큰 영향을 미칠 것이기 때문에 수정을 해야 하는 지에 대한 고민이 있었는데, 장기적인 관점에서 유효성 검증은 반드시 필요하다고 판단했고, 진행하기로 했다.
+> 
+> 그래서 유효성 검사 로직 변경 시작 전에 Java 및 Spring 진영에서 제공하는 유효성 검사 방법에 대해 정리하고, 실제 적용 중에 발생했던 예상치 못한 상황들에 대해
+> 정리를 하고자 한다.
 
 
 클라이언트에서도 서버로 보낼 데이터들의 유효성을 검사하겠지만, 안전한 통신을 위해서는 서버에서도 데이터의 유효성을 검증할 필요가 있다.
 
+올바르지 않은 값이 DB 등의 저장소에 저장되었다가, 시간이 흐른 후 정말 찾기 어려운 에러로 돌아오기도 한다. 이러한 상황에 대비하여 유효성 검증은
+권장이 아닌 필수로 진행해야 하는 부분이다.
+
+Java 에서는 ```@Valid``` 라는 어노테이션으로 유효성 검증을 지원하며, Spring 에서는 Java 의 ```@Valid``` 를 확장한 ```@Validated``` 
+어노테이션을 통한 유효성 검증을 진행한다. 두가지 
 
 
 ## @Valid
@@ -114,20 +126,55 @@ private int distance;
 
 이러한 변수가 있다고 가정하자.
 
-파라미터로 Integer 범위가 넘어가는, 예를 들어 1111111111 과 같은 값이 들어가면
-Cast Error 가 발생함
-이럴 때 해결 방안
+파라미터로 Integer 범위가 넘어가는, 예를 들어 ```1111111111``` 과 같은 값이 들어가면 Cast Error 가 발생한다.
+이럴 때 해결 방안으로 두 가지 정도 제시할 수 있을 것 같다.
+
 1. message.properties 파일에 해당 디폴트 메시지 정의하기
 2. Java 소스코드에서 예외 코드를 찾아 해당 코드에 맞게 메시지 분기 처리하기
 
-내 경우 2번의 방법을 선택했다. 1번의 방법이 더 올바른 방법이라고 생각했지만
-이미 많은 프로젝트에서 운영되고 있었고, 할당된 시간이 제한됐기 때문에 새로운 설정 파일을 운영 서버에 추가하는 것보다는 소스코드만을 수정하는 것이 더 리스크가 적을 것이라고 판단했다.
+내 경우 2번의 방법을 선택했다. 1번의 방법이 더 올바른 방법이라고 생각했지만 수정해야 하는 API 모듈이 이미 많은 프로젝트에서 운영되고 있었고, 
+할당된 시간이 제한됐기 때문에 새로운 설정 파일을 운영 서버에 추가하는 것보다는 소스코드만을 수정하는 것이 더 리스크가 적을 것이라고 판단했다.
 대안으로, 특정 코드마다 메시지를 정의하는 것이 아닌, 따로 정의하지 않은 모든 메시지를 디폴트 메시지('값이 올바르지 않습니다.' 등과 같은)로 설정하여,
 예기치 못한 예외 상황에 대처하기로 했다.
 
+다음은 2번 상황에 대한 예제 소스코드이다.
+
+```java
+@RestControllerAdvice
+public class RestControllerExceptionAdvice {
+    
+    //...
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(BindException.class)
+    public Object bindExceptionAdvice(HttpServletRequest request, HttpServletResponse response, BindException e) {
+      logger.error(e.getMessage());
+      
+      if(e.hasErrors()) {
+        FieldError fieldError = e.getFieldError();
+        
+        //정의되지 않은 메시지의 경우 Default Message 리턴
+        if(fieldError.getCode().contains("typeMismatch")) {
+            return ResponseHelper.error(new ApiException(CodeType.ERROR_BAD_PARAM));
+        }
+  
+        //사전에 정의한 예외에 해당하는 메시지 조회 후 에러객체 리턴
+        String errorMessage = fieldError.getDefaultMessage();
+  
+        return ResponseHelper.error(new ApiException(CodeType.ERROR_BAD_PARAM, errorMessage));
+      }
+  
+      return ResponseHelper.error(new ApiException(CodeType.ERROR_BAD_PARAM));
+    }
+    
+    //...
+}
+
+```
+
 시간의 여유가 좀 더 생기고 안정적인 배포가 가능해질 때, 수정할 예정이다.
 
-### 주의사항
+## 마치며
 
 유효성 검사는 꼭 필요한 계층에서 꼭 필요한 데이터만으로 검증을 진행해야 한다.
 검증 자체에 리소스가 소모되기 때문에 어플리케이션의 성능에 영향을 미칠 거라는 점을 항상 생각하면서 검증 절차를 추가해야 한다.
