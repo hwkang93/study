@@ -14,6 +14,12 @@
 - [Strategy Pattern](https://github.com/hwkang93/study/blob/main/design_pattern/strategy.md)
 - [Template Method Pattern](https://github.com/hwkang93/study/blob/main/design_pattern/template_method.md)
 
+### 데이터베이스
+- [PostgreSQL JSON 타입 사용하기](https://github.com/hwkang93/study/blob/main/database/postgresql_json.md)
+- [PostgreSQL like vs ilike](https://github.com/hwkang93/study/blob/main/database/postgresql_like_vs_ilike.md)
+- [PostgreSQL 시퀀스 관리하기](https://github.com/hwkang93/study/blob/main/database/postgresql_sequence.md)
+- [트랜잭션(Transaction)](https://github.com/hwkang93/study/blob/main/database/transaction.md)
+
 ### 깃
 
 - Command
