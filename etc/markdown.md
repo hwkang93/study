@@ -4,6 +4,8 @@
 
 ## 제목
 
+제목은 ```#``` 으로 표현한다. #은 총 6개(######)까지 지원한다.
+
 ### 사용 예시
 
 ```
@@ -12,6 +14,8 @@
 ### 제목 3
 #### 제목 4
 ##### 제목 5
+###### 제목 6
+####### 제목 7
 ```
 
 ### 결과
@@ -21,6 +25,8 @@
 ### 제목 3
 #### 제목 4
 ##### 제목 5
+###### 제목 6
+####### 제목 7
 
 ## 목록
 
@@ -190,9 +196,27 @@ public class Test {
 ```
 
 
+-----
+
+여기서부터는 마크다운 문법이라기보다는 플러그인 등을 통한 확장 기능이다.
+따라서 에디터에 따라 정상적으로 적용되지 않을 수도 있고, 비정상적으로 표출될 수 있다. 
+
+-----
+
 ## 수식
 
 https://latex.codecogs.com/
+
+https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/writing-mathematical-expressions
+
+$\sqrt{3x-1}+(1+x)^2$
+
+## UML & Grape
+
+해당 문법은 별도의 플러그인이 필요하며, 모든 마크다운 문법에서 지원하지는 않는다.
+개인적으로 사용하는 Typora, Github, IntelliJ 에서는 정상적으로 적용됨을 확인했다.
+
+> [IntelliJ .md 파일에서 다이어그램 사용하기](https://github.com/hwkang93/study/blob/main/etc/intellij_md_add_diagram_plugin.md)
 
 ```mermaid
 graph TD;
@@ -202,17 +226,31 @@ graph TD;
     C-->D;
 ```
 
-$\sqrt{3x-1}+(1+x)^2$
+https://github.com/hwkang93/baekjoon_algorithm/edit/master/src/level21/README.md
 
 ## 접기 / 펼치기
 
-https://github.com/occidere/TIL/issues/95
-
 github 
 
+```
+<details>
+    <summary> 펼치기 <summary>
+    
+    안녕하세요
+</details>
+```
 
+<details>
+    <summary> 펼치기 </summary>
+
+    ### 안녕하세요!
+</details>
 
 ## Reference
+
+https://github.com/occidere/TIL/issues/95
+
+https://mermaid-js.github.io/mermaid/#/
 
 https://gist.github.com/ihoneymon/652be052a0727ad59601
 
