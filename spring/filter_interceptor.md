@@ -47,10 +47,21 @@ public interface Filter {
 
 ### Filter 사용처
 
+- 공통된 보안 및 인증/인가 관련 작업
+- 모든 요청에 대한 로깅 또는 감사
+- 이미지/데이터 압축 및 문자열 인코딩
+- 스프링과 분리되어야 하는 기능
 
-### 기타
+### DelegatingFilterProxy
 
-SpringBoot 에서는 웹 컨테이너도 스프링 컨테이너 내에서 관리된다. 그렇기 때문에 Filter 객체도 스프링 컨테이너에서 관리할 수 있다. 
+Spring 1.2 버전 이상부터는, ```DelegatingFilterProxy``` 를 통해 필터를 스프링에서 관리할 수 있도록 지원한다.   
+여기서 DelegatingFilterProxy 란, 서블릿 컨테이너에서 관리되는 프록시용 필터로 서블릿 컨테이너와 스프링 컨테이너를 잇는 프록시 역할을 하는 객체이다.   
+사용자가 Filter 인터페이스 구현체를 만들어 스프링 빈으로 등록을 하면, 스프링 어플리케이션 구동 시 필터들이 빈 객체로 스프링 컨테이너에 등록이 된다.
+모든 빈이 스프링 컨테이너에 정상적으로 등록이 되면 DelegatingFilterProxy 는 빈으로 등록된 Filter 의 구현체들을 찾아 자신에게 추가하고 서블릿 컨텍스트에 DelegatingFilterProxy 를 추가한다.   
+이렇게 되면 요청에 대해 서블릿 컨텍스트는 DelegatingFilterProxy 에서 필터링을 진행하고, DelegatingFilterProxy 는 자신에게 등록된 필터들을 진행한다.
+
+SpringBoot 에서는 서블릿 컨테이너마저도 스프링 컨테이너 내에서 관리된다. 
+그렇기 때문에 SpringBoot 에서의 필터는 별도의 프록시 객체(DelegatingFilterProxy) 없이도 스프링 컨테이너에서 관리가 가능해졌다.
 
 ## Interceptor
 
@@ -84,6 +95,17 @@ public interface HandlerInterceptor {
 - **postHandle**
 
 - **afterComplete**
+
+### Interceptor 사용처
+
+- 세부적인 보안 및 인증/인가 공통 작업
+- API 호출에 대한 로깅 또는 감사
+- 컨트롤러로 넘겨주는 데이터의 가공
+
+
+## 마치며
+
+어떤 하나의 개념을 이해하기 위해서는 그 개념을 위해 반드시 알아야 할 개념들을 익히는 데 시간이 더 소요되는 것 같다.
 
 
 
