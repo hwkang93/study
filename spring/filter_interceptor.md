@@ -63,6 +63,7 @@ Spring 1.2 버전 이상부터는, ```DelegatingFilterProxy``` 를 통해 필터
 SpringBoot 에서는 서블릿 컨테이너마저도 스프링 컨테이너 내에서 관리된다. 
 그렇기 때문에 SpringBoot 에서의 필터는 별도의 프록시 객체(DelegatingFilterProxy) 없이도 스프링 컨테이너에서 관리가 가능해졌다.
 
+
 ## Interceptor
 
 ```java
@@ -87,14 +88,28 @@ public interface HandlerInterceptor {
 
 - 스프링에서 지원하는 기술로 Dispatcher Servlet 이 Controller 를 호출하기 전과 후에 요청과 응답을 참조하거나 가공할 수 있는 기능을 제공한다.
 - 새로운 request 와 response 객체를 생성하여 반환할 수 없다. 하지만 request 내의 값을 조작할 수는 있다.
-- 예외 발생 시 Spring 에서 제공하는 예외처리, 예를 들어 ```@RestControllerADvice``` 등에서 예외 처리가 가능하다.
+- 예외 발생 시 Spring 에서 제공하는 예외처리, 예를 들어 ```@RestControllerAdvice``` 등에서 예외 처리가 가능하다.
 
 
 - **preHandle**
 
+컨트롤러로 진입하기 전 실행되는 메서드이다. 데이터에 대한 전처리 작업 또는 데이터의 가공을 할 수 있다.
+여기서 말하는 데이터의 가공은 새로운 HttpServletRequest, HttpServletResponse 객체를 만드는 것이 아닌 
+기존 HttpServletRequest, HttpServletResponse 객체의 값을 변형하는 것을 말한다.
+preHandle 의 3번째 파라미터인 handler 파라미터는 핸들러 매핑이 찾아준 컨트롤러 빈에 매핑되는 HandlerMethod 라는 새로운 타입의 객체로써, @RequestMapping 이 붙은 메소드의 정보를 추상화한 객체이다.
+
+리턴 타입은 boolean 으로, true 값을 반환하면 다음 인터셉터 혹은 컨트롤러로의 진입을 가능하게 하며, false 인 경우 다음 작업을 진행하지 않는다.
+
+
 - **postHandle**
 
+Controller 에서 작업을 완료한 후 실행되며 데이터 후처리 또는 응답 객체의 조작을 할 수 있다.
+과거에는 컨트롤러의 리턴 값이 화면인 경우가 많아 ModelAndView 를 파라미터로 받았지만, 최근에는 REST API 를 많이 사용하면서 해당 파라미터를 잘 사용하지 않는다.
+
+
 - **afterComplete**
+
+뷰의 생성 등 모든 작업이 완료된 후 실행되는 메서드이다.
 
 ### Interceptor 사용처
 
