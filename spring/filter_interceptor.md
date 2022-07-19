@@ -66,6 +66,10 @@ SpringBoot 에서는 서블릿 컨테이너마저도 스프링 컨테이너 내�
 
 ## Interceptor
 
+- 스프링에서 지원하는 기술로 Dispatcher Servlet 이 Controller 를 호출하기 전과 후에 요청과 응답을 참조하거나 가공할 수 있는 기능을 제공한다.
+- 새로운 request 와 response 객체를 생성하여 반환할 수 없다. 하지만 request 내의 값을 조작할 수는 있다.
+- 예외 발생 시 Spring 에서 제공하는 예외처리, 예를 들어 ```@RestControllerAdvice``` 등에서 예외 처리가 가능하다.
+
 ```java
 package org.springframework.web.servlet;
 
@@ -85,10 +89,6 @@ public interface HandlerInterceptor {
     }
 }
 ```
-
-- 스프링에서 지원하는 기술로 Dispatcher Servlet 이 Controller 를 호출하기 전과 후에 요청과 응답을 참조하거나 가공할 수 있는 기능을 제공한다.
-- 새로운 request 와 response 객체를 생성하여 반환할 수 없다. 하지만 request 내의 값을 조작할 수는 있다.
-- 예외 발생 시 Spring 에서 제공하는 예외처리, 예를 들어 ```@RestControllerAdvice``` 등에서 예외 처리가 가능하다.
 
 
 - **preHandle**
