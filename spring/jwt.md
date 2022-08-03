@@ -13,9 +13,35 @@ xxxxxxx.yyyyyyy.zzzzzzz
 
 - 헤더 (Header)
 
+헤더에는 Type 과 Algorithm 이 포함되어 있으며, 알고리즘에는 해당 토큰이 사용하고 있는 알고리즘의 종류가 명시된다.
+
 - 내용 (Payload)
 
+페이로드는 토큰에 담겨야할 내용들을 가지고 있는 부분이다. 
+claim 이라는 단위로 구성되어 있으며, 각각의 claim 은 key-value 구조로 이루어져 있다. 
+페이로드의 claim 은 다시 registered claim, public claim, private claim 으로 구분된다.
+
+** registered claim **
+
+등록된(?) 클레임은 사용자가 정의한 클레임이 아닌, 토큰에 대한 정보를 전송하기 위해 키값이 이미 정의돼있는 클레임이다.
+이 클레임들의 사용 여부는 필수가 아닌 선택이며, 정의된 키들은 다음과 같다.
+
+\-----\----------\
+/iss  /토큰 발급자 /
+
+** public claim **
+
+
+
+** private claim **
+
+
+
+
+
 - 서명 (Signature)
+
+
 
 ## JWT 의 특징
 
@@ -63,12 +89,14 @@ xxxxxxx.yyyyyyy.zzzzzzz
 
 ## Reference
 
-http://www.opennaru.com/opennaru-blog/jwt-json-web-token-with-microservice/
+[JWT (JSON Web Token) – 마이크로서비스를 위한 인증과 인가 - opennaru](http://www.opennaru.com/opennaru-blog/jwt-json-web-token-with-microservice/)
 
-http://www.opennaru.com/opennaru-blog/jwt-json-web-token/
+[JWT(JSON Web Token) 이해와 활용 - opennaru](http://www.opennaru.com/opennaru-blog/jwt-json-web-token/)
 
-https://jwt.io/introduction
+[JWT](https://jwt.io/introduction)
 
-https://techdocs.broadcom.com/kr/ko/symantec-security-software/identity-security/siteminder/12-8/464989729/464989730/464989742/464989775.html
+[JWT(JSON Web Token) 인증 체계 - BROADCOM](https://techdocs.broadcom.com/kr/ko/symantec-security-software/identity-security/siteminder/12-8/464989729/464989730/464989742/464989775.html)
 
-https://velog.io/@park2348190/JWT%EC%97%90%EC%84%9C-Refresh-Token%EC%9D%80-%EC%99%9C-%ED%95%84%EC%9A%94%ED%95%9C%EA%B0%80
+[JWT 에서 Refresh Token 은 왜 필요한가?](https://velog.io/@park2348190/JWT%EC%97%90%EC%84%9C-Refresh-Token%EC%9D%80-%EC%99%9C-%ED%95%84%EC%9A%94%ED%95%9C%EA%B0%80)
+
+[[JWT] JSON Web Token 소개 및 구조 - VELOPERT.LOG](https://velopert.com/2389)
