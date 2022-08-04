@@ -21,27 +21,33 @@ xxxxxxx.yyyyyyy.zzzzzzz
 claim 이라는 단위로 구성되어 있으며, 각각의 claim 은 key-value 구조로 이루어져 있다. 
 페이로드의 claim 은 다시 registered claim, public claim, private claim 으로 구분된다.
 
-** registered claim **
+**Registered claim**
 
 등록된(?) 클레임은 사용자가 정의한 클레임이 아닌, 토큰에 대한 정보를 전송하기 위해 키값이 이미 정의돼있는 클레임이다.
-이 클레임들의 사용 여부는 필수가 아닌 선택이며, 정의된 키들은 다음과 같다.
+이 클레임들의 사용 여부는 필수가 아닌 선택이며, 다음은 정의된 키 중 일부이다.
 
-\-----\----------\
-/iss  /토큰 발급자 /
+| Key | Value |
+|-----|-------|
+| iss | 발급자   |
+| exp | 만료 시간 |
+| sub | 제목    |
+| aud | 대상    |
 
-** public claim **
+정의된 다른 키는 [이 곳](https://datatracker.ietf.org/doc/html/rfc7519#section-4.1) 에서 확인할 수 있다.
 
+**Public claim**
 
+공개 클레임은 사용자가 정의할 수 있으며, 정보 전달을 위해 사용한다. 클레임 간 충돌 가능성이 존재하는데, 이를 방지하기 위해 URI 형식으로 작성한다.
 
-** private claim **
+**Private claim**
 
-
+비공개 클레임은 당사자 간의 정보 전달을 위해 만들어진 사용자 지정 클레임으로, 유저를 특정할 수 있는 정보를 주로 담는다.
 
 
 
 - 서명 (Signature)
 
-
+서명은 서버에서 정의한 키값으로 헤더 + 페이로드의 값을 헤더에서 정의한 알고리즘 방식으로 암호화를 한 값이다.
 
 ## JWT 의 특징
 
@@ -50,6 +56,7 @@ claim 이라는 단위로 구성되어 있으며, 각각의 claim 은 key-value 
 - 다른 토큰(SWT, SAML)에 비해 크기가 작다.
 - JSON 객체이기 때문에 브라우저의 영향을 적게 받는다.
 - 모바일에 특화되어 있다.
+- 디버깅이 용이하다.
 
 ## 주의사항
 
@@ -57,17 +64,10 @@ claim 이라는 단위로 구성되어 있으며, 각각의 claim 은 key-value 
 - 위와 같은 이유로 JWT 의 유효 기간이 너무 길면 안된다.
 - 너무 많은 데이터를 페이로드에 담아놓으면 '경량' 이라는 JWT 만의 이점이 사라질 수 있다. 꼭 필요한 데이터만 담자.
 
-## 예제
 
 ## Access Token 과 Refresh Token 에 대하여
 
-
-
-~~JWT 는 Stateless 하다는 특징을 가지고 있다. 그렇기 때문에 토큰 그 자체에 어플리케이션에 대한 인가 등 모든 정보를 담고 있어야 한다.~~
 토큰의 탈취 위험을 최소화하기 위해 JWT 는 Access-Token 과 Refresh-Token 으로 구분하여 관리할 수도 있다.
-
-
-
 
 - Access-Token 은 클라이언트에 제공하는 토큰으로 Refresh-Token 에 비해 유효기간이 매우 짧다.
 - Refresh-Token 은 서버(DB 등과 같은 저장소)에 저장되어 있는 토큰이며, Access-Token 에 비해 유효기간이 길다. Access-Token 을 재발급하는 용도로만 사용한다.
