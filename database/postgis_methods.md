@@ -47,6 +47,22 @@ SELECT ST_SRID(ST_GeomFromText('POINT(-71.1043 42.315)',4326));
 - PostGIS 2.0.0 이전 버전에서는 비어있는 좌표를 조회하기 위해서는  ```ST_GeomFromText('GEOMETRYCOLLECTION(EMPTY)')``` 로 조회했으나
 2.0.0 버전부터는 ```ST_GeomFromText('GEOMETRYCOLLECTION EMPTY')``` 메서드를 사용해야 한다.
 
+### ST_TRANSFORM
+
+**Geometry ST_TRANSFORM(Geometry geometry, Integer srid)**
+**Geometry ST_TRANSFORM(Geometry geometry, Text proj)**
+**Geometry ST_TRANSFORM(Geometry geometry, Text from_proj, Text to_proj)**
+**Geometry ST_TRANSFORM(Geometry geometry, Text from_proj, Integer to_srid)**
+
+- Geometry 값의 좌표를 변환한다.
+- ```from_proj``` 파라미터가 없는 경우에는 Geometry 값에 SRID 가 정의되어 있어야 한다.
+
+### ST_SETSRID
+
+**Geometry ST_SETSRID(Geometry geometry, Integer srid)**
+
+- 이미 정의되어 있거나, 정의되지 않은 Geometry 값에 SRID 값을 설정한다.
+- 단순히 SRID 값만 설정할 뿐, 실제 좌표값에는 변화가 없다.
 
 ## Reference
 
