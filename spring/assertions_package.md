@@ -9,11 +9,43 @@ import static org.junit.jupiter.api.Assertions.*;
 
 ## org.assertj.core.api.Assertions
 
-```assertThat```
+### assertThat
+
+```
+String userName = "Tester1";
+long userId = 1L;
+
+UserResponse userResponse = userService.findByUserId(long userId);
+
+Assertions.assertThat(userResponse.getUserName()).isEqualTo(userName);
+```
+
+### doesNotThrowAnyException
+
+```
+long userId = 1L;
+
+Assertions.assertThatCode(() -> userService.findByUserId(long userId)).doesNotThrowAnyException();
+```
 
 ## org.junit.jupiter.api.Assertions
 
+### assertThrow
 
-```assertThrow```
+```
+long userId = 1L;
 
-```assertNotNull```
+Assertions.assertThrows(NullPointerException.class, () -> userService.findByUserId(userId));
+```
+
+### assertNotNull
+
+### assertTrue / assertFalse
+
+```
+long userId = 1L;
+
+UserResponse userResponse = userService.findByUserId(long userId);
+
+Assertions.assertTrue(userResponse.isAdmin());
+```
