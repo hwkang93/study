@@ -27,16 +27,18 @@
 
 ### 1. @SpringBootTest(webEnvironment=WebEnvironment.MOCK)
 
-webEnvironment=WebEnvironment.RANDOM_PORT 의 경우 테스트가 진행되는 스레드와, DB 커넥션을 갖는 스레드는 별도의 스레드기 때문에, 롤백이 불가능하다.   
+webEnvironment=WebEnvironment.RANDOM_PORT 의 경우 테스트가 진행되는 스레드와 DB 커넥션을 갖는 스레드는 별도의 스레드기 때문에, 롤백이 불가능하다.   
 그래서 webEnvironment=WebEnvironment.MOCK 으로 수정했고, 맵서버와 통신을 위해 사용하는 Bean 객체만 Mock 객체(@MockBean)로 만들었다.
 
+### 2. @Transactional 어노테이션 추가
 
-
+테스트 메서드, 테스트 클래스에 @Transactional 어노테이션을 추가했다.(서비스 레이어에는 이미 @Transactional 어노테이션이 추가돼있었다.)
 
 ## 응?
 
 여전히 정상적으로 롤백이 되지 않았다.
-테스트 케이스 실행 후 로그를 확인해도 정상적으로 롤백되었다고 나온다.
+테스트 케이스 실행 후 로그를 확인하면 정상적으로 롤백되었다고 나온다.
+
 ```
 [           main] Began transaction (1) for test context [DefaultTestContext@7188af83 ~~ rollback [true]
 [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
@@ -92,3 +94,24 @@ public class HikariConfig implements HikariConfigMXBean {
 }
 ```
 
+## 해결
+
+```java
+class DataBaseConfig {
+    
+    //중략
+    
+    private DataSource dataSource(String crtfckey, String driverClassName, String jdbcUrl, String username, String password) {
+        HikariDataSource dataSource = new HikariDataSource();
+        dataSource.setDriverClassName(driverClassName);
+        dataSource.setJdbcUrl(jdbcUrl);
+        dataSource.setUsername(username);
+        dataSource.setPassword(password);
+        dataSource.setAutoCommit(false);
+        return dataSource;
+    }
+    
+    //중략
+}
+
+```
