@@ -2,9 +2,9 @@
 
 ## Log 란?
 
+프로그램을 개발 또는 운영하고 있을 때, 프로그램 실행 상태에 대한 정보를 출력하고 기록하는 것을 말한다.
 
-
-## Log 종류
+## Log 프레임워크 종류
 
 ### Apache Log4j
 
@@ -23,6 +23,11 @@ Apache Log4j2는 3가지 로깅 프레임워크 중 가장 최신이다. 목표�
 Lockback과 마찬가지로 Log4j2는 SLF4J를 기본적으로 지원하고, 로깅 설정을 자동 새로고침, 향상된 필터 옵션을 지원을 한다. 
 게다가 람다식에 기반하여 로그 상태의 lazy evaluation 지원, low-latency를 위한 비동기 로깅제공, 
 GC 작동에 의해 발생하는 지연을 피하기위한 garbage-free mode도 제공한다.
+
+> **Slf4j(Simple Logging Facade for Java)**   
+> 
+> 로깅 프레임워크에 대한 추상화 라이브러리. 
+> slf4j 를 통해 로깅 프레임워크 구현체의 종류와 상관없이 일관된 로깅 코드를 작성할 수 있다.
 
 ## Logging Level
 
