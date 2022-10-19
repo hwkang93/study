@@ -1,4 +1,7 @@
-# IntelliJ 테스트 실행 시 한글이 깨져 보이는 경우
+# IntelliJ 한글 깨짐 문제 모음
+
+
+## IntelliJ 테스트 실행 시 한글이 깨져 보이는 경우
 
 <img width="80%" src="https://user-images.githubusercontent.com/49870384/165988913-7151e035-c7ed-4cc7-bb53-fe1be2d9b16b.PNG">
 
@@ -15,4 +18,13 @@ IntelliJ 에서 테스트 실행 시 위의 사진처럼 테스트 결과의 한
 
 <img width="80%" src="https://user-images.githubusercontent.com/49870384/165988953-163f88a5-164f-43b3-aabe-bf4477bb0d53.PNG">
 
+## Tomcat Log 에서 한글이 깨져 보이는 경우
 
+1. 서버 선택 > Edit Configurations... 클릭
+2. VM Options 에 다음을 추가한다.
+
+```
+-Duser.language=en -Duser.region=us
+```
+
+3. 서버를 재기동해준다.
