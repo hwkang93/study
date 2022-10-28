@@ -5,7 +5,13 @@
 Wrapper 가 특정 인터페이스를 준수해야 하며, 폴리포픽 기능을 지원해야 할 경우에는 Facade 패턴보다는 Adapter 패턴을 사용해야 한다.
 쉽고 단순한 인터페이스를 제공하고 싶을 경우에 Facade 패턴을 사용하는 것이 좋다.
 
+## Slf4j
+
+[원본 이미지 바로가기](https://www.javatpoint.com/log4j-vs-slf4j)
+
 ## Reference
+
+https://www.javatpoint.com/log4j-vs-slf4j
 
 https://imasoftwareengineer.tistory.com/29
 
