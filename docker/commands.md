@@ -155,9 +155,15 @@ docker container diff [컨테이너명/컨테이너아이디]
 
 > **변경구분자**
 > 
-> A : 파일 추가
-> D : 파일 삭제
-> C : 파일 수정
+> A : 파일 추가   
+> D : 파일 삭제   
+> C : 파일 수정   
+
+- 실행중인 컨테이너 내부 진입
+
+```
+docker exec it [container_id] /bin/bash
+```
 
 ## Reference
 
