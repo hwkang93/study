@@ -38,7 +38,7 @@ class RequestUtils {
 
 ```java
 class RequestUtils {
-    public static String getAgent(HttpServletRequest request) {
+    public static String getBrowser(HttpServletRequest request) {
         String agent = getAgent(request);
         String browser = "";
 
