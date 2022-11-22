@@ -27,3 +27,33 @@ console.log(checkedValues);
 //[A, B]
 ```
 
+### Form 객체 Submit 메소드 구현하기
+
+```javascript
+function submit(url, params) {
+	var form = document.createElement('form');
+	form.setAttribute('method', 'post');
+	form.setAttribute('action', url);
+
+	for(var key in params) {
+		var field = document.createElement('input');
+		field.setAttribute('type', 'hidden');
+		field.setAttribute('name', key);
+		field.setAttribute('value', params[key]);
+
+		form.appendChild(field);
+	}
+
+	document.body.appendChild(form);
+	form.submit();
+}
+
+const url = '/users'
+const data = {
+    'id' : 'userId' ,
+    'password' : encryptPassword('userPassword1!')
+}
+
+submit(url, data);
+```
+
