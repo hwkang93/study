@@ -1,6 +1,20 @@
 # 이중 중괄호 (Double brace initialization)
 
+Java 에서는 이중 중괄호를 사용해 다음과 같이 객체의 생성과 초기화를 동시에 진행할 수 있다.
 
+```java
+class DoubleBraceInitializationTest {
+    public static void main(String[] args) {
+        List<String> list = new ArrayList<String>() {{
+            add("A");
+            add("B");
+            add("C");
+        }};
+    }
+}
+```
+
+이중 중괄호의 사용은 Java 에서 대표적인 **안티 패턴** 으로 분류되고 있는데, 그 이유는 다음과 같다.
 
 ### 장점
 
@@ -20,10 +34,34 @@
 
 ### 대안
 
+Java 에서 제시하는 이중 중괄호의 대안 방안은 다음과 같다.
+
 #### 1. Java 8 Stream API 사용
+
+Java 8 버전 이상부터는 Stream API 를 통해 다음과 같이 Collection 객체를 만들 수 있다.
+
+```java
+class StreamTest {
+    public static void main(String[] args) {
+        List<String> list = Stream.of("A", "B", "C").collect(Collectors.toList());
+        Set<String> set = Stream.of("A", "B", "C").collect(Collectors.toSet());
+    }
+}
+```
 
 
 #### 2. Java 9 Collection Factory
+
+Java 9 버전 이상부터는 Factory 메서드를 통해 다음과 같이 Collection 객체를 만들 수 있다.
+
+```java
+class CollectionFactoryTest {
+    public static void main(String[] args) {
+        List<String> list = List.of("A", "B", "C");
+        Set<String> set = Set.of("A", "B", "C");
+    }
+}
+```
 
 ## Reference
 
