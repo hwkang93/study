@@ -47,4 +47,4 @@ class ConnectionUtils {
 DriverManager.setLoginTimeout(10);  // 10sec
 ```
 
-메서드를 사용하면 된다.
+메서드를 사용하면 된다.  
