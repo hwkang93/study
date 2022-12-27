@@ -18,3 +18,20 @@ WHERE C.RELKIND = 'r'
 -- AND NSPNAME = '스키마명'
 -- AND RELNAME = '테이블명'
 ```
+
+### 참고
+- **PG_CATALOG.PG_CLASS.RELKIND 구분**
+  - **r = ordinary table** 
+  - i = index 
+  - S = sequence 
+  - t = TOAST table 
+  - **v = view**
+  - **m = materialized view**
+  - c = composite type 
+  - f = foreign table 
+  - p = partitioned table 
+  - I = partitioned index
+
+## Reference
+
+https://www.postgresql.org/docs/current/catalog-pg-class.html
