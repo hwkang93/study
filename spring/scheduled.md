@@ -4,6 +4,39 @@
 
 스프링부트에서 일정 기간, 혹은 특정 시간마다 코드를 실행시킬 수 있도록 설정하는 방법이다.
 
+### @Scheduled 사용 방법
+
+어플리케이션 클래스에 @EnableScheduling 어노테이션을 추가해준다.
+
+```java
+@EnableScheduling
+@SpringBootApplication
+public class MyApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(MyApplication.class, args);
+    }
+
+}
+```
+
+그리고 작업을 진행할 메서드에 ```@Scheduled``` 어노테이션을 추가해준다.
+```@Scheduled``` 어노테이션이 추가된 클래스는 반드시 Spring Bean 으로 등록되어 있어야 한다.
+(아래 예시에서는 @Service 어노테이션을 통해 MyService 클래스가 Spring Bean 객체임을 알 수 있다.)
+
+또한 ```@Scheduled``` 어노테이션이 추가된 메소드는 **리턴 타입이 void 여야 하고 매개변수를 사용할 수 없다.**
+
+```java
+@Service
+public class MyService {
+
+    @Scheduled(fixedDelay = 1000)
+    public void run() {
+        System.out.println("Scheduled Run!!");
+    }
+}
+```
+
 
 
 ### @Scheduled 속성
