@@ -11,6 +11,8 @@ where f_table_schema = 'my_schema';
 
 ### 참고
 
+#### 테이블 COMMENT 까지 함께 출력하기 
+
 테이블의 comment 까지 함께 출력하는 쿼리를 작성하는 방법이다.   
 (언젠가 사용할 일이 있을 것 같아..)
 
@@ -29,3 +31,16 @@ where c.relkind = 'r'
   and nspname = 'my_schema'
  order by 1 desc;
 ```
+
+#### 타입이 Geometry 인 경우
+
+기본적으로 정의해야 할 Geometry Type 에는,
+```
+POINT   = POINT, MULTIPOINT
+LNE     = LINESTRING, MULTILINESTRING
+POLYGON = POLYGON, MULTIPOLYGON 
+```
+
+이 있다. 이 타입들은 각각 테이블 생성 시 Geometry 타입을 정의한 것인데, 공간 테이블이지만 Geometry 타입을 정의하지 않은 테이블의 타입은
+**Geometry** 로 나온다.
+이 경우 ```ST_GEOMETRYTYPE``` 쿼리를 한번 더 날려서 확인하는 등의 후처리 작업이 필요하다.
