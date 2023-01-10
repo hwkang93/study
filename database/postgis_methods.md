@@ -9,6 +9,27 @@ PostGIS 에서 제공하는 공간 메서드를 사용하기 위해서는 기본
 
 - Geometry 의 중심 좌표를 조회한다.
 
+### ST_POINTONSURFACE
+
+**Geometry ST_PointOnSurface(Geometry geometry)**
+
+- Geometry 의 중심 좌표를 조회한다.
+
+
+>
+> **ST_CENTROID VS ST_POINTONSURFACE**
+> 
+> 두 함수 모두 Geometry 의 중심 좌표를 구하는 함수이지만,
+> ST_POINTONSURFACE 는 실제 폴리곤 면적의 중심값을 구하는 함수이고, 
+> ST_CENTROID 는 END-POINT 들의 중심점을 구하는 함수이다. 
+> 
+> ![ST_PointOnSurface](https://user-images.githubusercontent.com/49870384/211461148-a2bf9d67-9519-4f66-a8e9-4759b4217f41.png)
+>
+> **Reference**
+> 
+> [ST_PointOnSurface - H2](http://www.h2gis.org/docs/dev/ST_PointOnSurface/)
+
+
 ### ST_X & ST_Y
 
 **Float ST_X(Geometry point)** & **Float ST_Y(Geometry point)**
