@@ -30,3 +30,20 @@ public class UserProperties {
 }
 
 ```
+
+## @PropertySource
+
+```org.springframework.context.annotation``` 패키지의 PropertySource 어노테이션을 사용해 properties 파일을 불러올 수도 있다.   
+사용 방법 및 특징은 위의 application.properties 방법과 유사하다.
+
+```java
+@Component
+@PropertySource(ignoreResourceNotFound = true, value = {"classpath:user.properties", "file:/config/user.properties"})
+public class UserProperties {
+    @Value("${user.name}")
+    private String userName;
+
+    @Value("${user.age}")
+    private int userAge;
+}
+```
