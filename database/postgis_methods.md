@@ -85,6 +85,21 @@ SELECT ST_SRID(ST_GeomFromText('POINT(-71.1043 42.315)',4326));
 - 이미 정의되어 있거나, 정의되지 않은 Geometry 값에 SRID 값을 설정한다.
 - 단순히 SRID 값만 설정할 뿐, 실제 좌표값에는 변화가 없다.
 
+### ST_ASGEOJSON
+
+**Text(JSON) ST_ASGEOJSON(Geometry Geometry, Integer maxdecimaldigits)**   
+**Text(JSON) ST_ASGEOJSON(Geometry Geometry, Integer maxdecimaldigits, Integer Options)**
+
+- Geometry 정보를 GeoJson 형태로 반환한다.
+- 2D, 3D 모두 지원가능하다.
+- maxdecimaldigits 은 소수점 자리 수를 지정한다. (max : 9)
+- 다음은 Options 에 들어갈 수 있는 정보이다.
+  - 0 : 옵션을 설정하지 않는다
+  - 1 : GeoJson BBOX 도 함께 리턴한다.
+  - 2 : CRS 약어도 함께 리턴한다 ex) EPSG:4326
+  - 4 : CRS 의 정식 명칭도 함께 리턴한다 ex) urn:ogc:def:crs:EPSG::4326
+  - 8 : EPSG 가 아닌 경우 CRS:4326 등의 값으로 리턴한다.
+
 ## Reference
 
 https://postgis.net/docs/
