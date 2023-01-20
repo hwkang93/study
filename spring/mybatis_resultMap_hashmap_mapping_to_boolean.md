@@ -34,11 +34,37 @@ java 에서는 리턴 타입을 ```List<HashMap<String, Object>>``` 으로 작�
 
 ```DefaultResultSetHandler.java```
 
+디버깅을 하다 보니 ```DefaultResultSetHandler.java``` 클래스에 쿼리 결과값을 ```metaObject``` 객체에 매핑해주는  ```applyAutomaticMappings``` 메서드가 있었다.
+
+```java
+private boolean applyAutomaticMappings(ResultSetWrapper rsw, ResultMap resultMap, MetaObject metaObject, String columnPrefix) throws SQLException {
+    List<UnMappedColumnAutoMapping> autoMapping = createAutomaticMappings(rsw, resultMap, metaObject, columnPrefix);
+    boolean foundValues = false;
+    if (!autoMapping.isEmpty()) {
+      for (UnMappedColumnAutoMapping mapping : autoMapping) {
+        final Object value = mapping.typeHandler.getResult(rsw.getResultSet(), mapping.column);
+        if (value != null) {
+          foundValues = true;
+        }
+        if (value != null || (configuration.isCallSettersOnNulls() && !mapping.primitive)) {
+          // gcode issue #377, call setter on nulls (value is not 'found')
+          metaObject.setValue(mapping.property, value);
+        }
+      }
+    }
+    return foundValues;
+  }
+```
+
+
+
 
 ### 해결 방안
 
-프로젝트 구조마다 해결 방법이 조금 다를 수 있겠지만, **TypeHandler 파일을 만들고 mybatis 설정 파일에 작성한 TypeHandler.java 파일을 매핑시켜주면 된다.**
+프로젝트 구조마다 해결 방법이 조금 다를 수 있겠지만, **TypeHandler 파일을 만들고 mybatis 설정 파일에 작성한 TypeHandler.java 파일을 매핑시켜줬다.**
 
 
+
+## Reference
 
 https://mybatis.org/mybatis-3/ko/configuration.html
