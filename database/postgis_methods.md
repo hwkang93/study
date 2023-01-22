@@ -100,6 +100,12 @@ SELECT ST_SRID(ST_GeomFromText('POINT(-71.1043 42.315)',4326));
   - 4 : CRS 의 정식 명칭도 함께 리턴한다 ex) urn:ogc:def:crs:EPSG::4326
   - 8 : EPSG 가 아닌 경우 CRS:4326 등의 값으로 리턴한다.
 
+
+### ST_EstimatedExtent
+
+### ST_EXTENT
+
+
 ## Reference
 
 https://postgis.net/docs/
