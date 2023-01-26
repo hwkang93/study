@@ -20,17 +20,23 @@ WHERE C.RELKIND = 'r'
 ```
 
 ### 참고
-- **PG_CATALOG.PG_CLASS.RELKIND 구분**
-  - **r = ordinary table** 
-  - i = index 
-  - S = sequence 
-  - t = TOAST table 
-  - **v = view**
-  - **m = materialized view**
-  - c = composite type 
-  - f = foreign table 
-  - p = partitioned table 
-  - I = partitioned index
+
+####PG_CATALOG.PG_CLASS.RELKIND 구분자
+
+RELKIND 컬럼은 테이블 구분코드이다. 주관적으로 자주 사용하는 값은 r, v, m 정도가 있었다.
+
+- **r = ordinary table** 
+- i = index 
+- S = sequence 
+- t = TOAST table 
+- **v = view**
+- **m = materialized view**
+- c = composite type 
+- f = foreign table 
+- p = partitioned table 
+- I = partitioned index
+
+
 
 ## Reference
 
