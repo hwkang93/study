@@ -19,7 +19,7 @@ public class MyApplication {
 
 }
 ```
-
+ 
 그리고 작업을 진행할 메서드에 ```@Scheduled``` 어노테이션을 추가해준다.
 ```@Scheduled``` 어노테이션이 추가된 클래스는 반드시 Spring Bean 으로 등록되어 있어야 한다.
 (아래 예시에서는 @Service 어노테이션을 통해 MyService 클래스가 Spring Bean 객체임을 알 수 있다.)
