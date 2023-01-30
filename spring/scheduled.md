@@ -38,7 +38,6 @@ public class MyService {
 ```
 
 
-
 ### @Scheduled 속성
 
 - fixedDelay(Integer) : 밀리세컨드(1/1000s) 단위로 이전 Task 의 **종료 시점**으로부터 정의된 시간만큼 지난 후 Task 를 실행한다.
