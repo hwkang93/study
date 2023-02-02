@@ -27,6 +27,14 @@ console.log(checkedValues);
 //[A, B]
 ```
 
+### 셀렉트박스 초기화
+
+```javascript
+function clearCheckbox(checkboxId) {
+    document.querySelector('#' + checkboxId).innerHTML = '';
+}
+```
+
 ### Form 객체 Submit 메소드 구현하기
 
 ```javascript
