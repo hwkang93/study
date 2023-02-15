@@ -107,3 +107,10 @@ public interface RefreshTokenRepository extends CrudRepository<RefreshToken, Str
     
 }
 ```
+
+정말 간단하게 진행해본 Redis 설정 과정이었다.
+스프링 공식 홈페이지에 자세한 설정 정보들이 있으니 참고해보면 좋을 듯하다.
+
+## Reference
+
+https://docs.spring.io/spring-data/redis/docs/2.3.3.RELEASE/reference/html/#redis.repositories
