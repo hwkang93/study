@@ -147,11 +147,29 @@ exchange 객체가 필터링 중 Access Denied (403) 오류가 발생하면 해�
 
 스프링에서 기본적으로 제공하는 세션 객체는
 WebSessionServerSecurityContextRepository, NoOpServerSecurityContextRepository 두 개가 있으며
+디폴트 값은 WebSessionServerSecurityContextRepository 로 ServerWebExchange 객체의 세션에 저장된다.
+예제에서 NoOpServerSecurityContextRepository 로 설정한 이유는 인증 모듈이 무상태성을 띄기 위해서이다. 세션을 사용하게 되면, 서버에서 세션의 정보를 갖기 때문에 무상태성을 보장하지 않는다.
 
+### (2)
 
+cors 설정을 하는 부분이다. ```corsConfigurationSource()``` 구현 내용은 다음과 같다.
 
-디폴트 값은 ServerWebExchange 객체의 세션에 저장되며, NoOpServerSecurityContextRepository 로 설정한
+```java
+public CorsConfigurationSource corsConfigurationSource() {
+    CorsConfiguration configuration = new CorsConfiguration();
+    configuration.setAllowedOrigins(Arrays.asList("*"));
+    configuration.setAllowedMethods(Arrays.asList("GET","POST", "OPTIONS", "PUT", "DELETE"));
+    configuration.setAllowedHeaders(Arrays.asList("*"));
 
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/**", configuration);
+
+    return source;
+}
+```
+
+소스코드만 보면 느껴지겠지만 모든 HTTP 메소드 및 요청 도메인, 요청 헤더를 허용하겠다는 의미이다.
+개발 과정에서는 모든 설정을 열어두고 개발을 진행해야 했기 때문에 모든 설정을 허용한 상태이다.
 
 
 **Chat GPT 에 따르면..**
