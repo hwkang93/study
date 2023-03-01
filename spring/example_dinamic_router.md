@@ -1,4 +1,17 @@
+# mybatis 에서 Dynamic Router 설정하기
 
+데이터베이스를 통한 데이터 조회 시 가장 많은 자원을 소모하는 곳이 바로 서버와 데이터베이스를 연결하는 부분이다.
+데이터를 조회할 때마다 데이터베이스와 연결을 맺어야 하는 자원 낭비를 줄이기 위해 스프링에서는 어플리케이션 기동 시 
+데이터베이스 커넥션 객체를 스프링 빈(Bean) 객체로 만들고 미리 연결을 맺어놓는다. 그리고 서버에서 데이터베이스와 연결할 때 미리 맺어놓은 연결을 사용해
+최소한의 자원 소모로 효율적인 데이터베이스와의 연결을 가능하게 한다.
+
+하나의 데이터베이스만을 연결해야 하는 상황에서는 기본적으로 
+
+다음 예제에 작성된 소스코드들의 기본적인 매커니즘은 다음과 같다.
+
+1. 서비스 기동 시 커넥션 객체(DataSource)로 등록할 정보를 조회한다.
+2. 조회한 정보들로 커넥션 객체를 만들고 Map 에 담아 Key(여기서는 certkey 라는 API-Key 로 지정) 와 함께 Spring Bean 객체로 만든다. 
+3. 클라이언트의 요청이 들어오면 Key 값에 맞는 커넥션 객체를 조회하고, 커넥션과 연결한다.
 
 #### RoutingDataSourceContextHolder
 
@@ -139,12 +152,14 @@ public class RoutingDataSource extends AbstractRoutingDataSource {
 @RequiredArgsConstructor
 public class RoutingDataSourceUtil {
     
+    private final DatabaseInfoMapper databaseInfoMapper;
+    
 	private final CryptoAriaService cryptoAriaService;
 
 	public Map<Object, Object> loadRoutingDataSource() throws ApiException {
 		Map<Object, Object> targetDataSources = new HashMap<>();
 		try {
-			List<ApiUseDetailType> apiUseInfo = apiUseMapper.list(null);
+			List<DatabaseInfo> apiUseInfo = databaseInfoMapper.getDatabaseInfoList(null);
 			for (ApiUseDetailType info : apiUseInfo) {
 				String driverClassName = "org.postgresql.Driver";
 				String crtfckey = info.getCrtfckey();
@@ -167,10 +182,10 @@ public class RoutingDataSourceUtil {
 		ApiUseDetailType info = apiUseMapper.selectByCrtfckey(crtfckey);
 		if(info == null)
 			return null;
-		return routingDataSource(crtfckey, "org.postgresql.Driver", info.getDatabaseUrl(), info.getDatabaseUsernm(), cryptoAriaService.decryptData(info.getDatabasePassword()));
+		return routingDataSource("org.postgresql.Driver", info.getDatabaseUrl(), info.getDatabaseUsernm(), cryptoAriaService.decryptData(info.getDatabasePassword()));
 	}
 
-	private DataSource routingDataSource(String crtfckey, String driverClassName, String jdbcUrl, String username,
+	private DataSource routingDataSource(String driverClassName, String jdbcUrl, String username,
 			String password) {
 		HikariDataSource dataSource = new HikariDataSource();
 		dataSource.setDriverClassName(driverClassName);
