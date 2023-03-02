@@ -7,6 +7,9 @@
 
 하나의 데이터베이스만을 연결해야 하는 상황에서는 기본적으로 
 
+
+** 아래 예제는 여러 커넥션 객체를 미리 만들어놓고, 클라이언트의 요청에 따라 동적으로 데이터베이스를 결정하는 방법에 대한 예제이다.**
+
 다음 예제에 작성된 소스코드들의 기본적인 매커니즘은 다음과 같다.
 
 1. 서비스 기동 시 커넥션 객체(DataSource)로 등록할 정보를 조회한다.
@@ -37,6 +40,8 @@ public class RoutingDataSourceContextHolder {
 
 
 #### RoutingDataSourceConfig
+
+커넥션 객체(DataSource) 와 mapper 디렉토리를 매핑하고, 커넥션 객체 생성 및 스프링 빈으로 설정하는 등 전체적인 설정을 하는 클래스이다. 
 
 ````java
 @Configuration
@@ -80,6 +85,11 @@ public class RoutingDataSourceConfig {
 ````
 
 #### RoutingDataSource
+
+여러 커넥션 객체 중 클라이언트의 요청에 맞는 커넥션 객체를 결정해주는 클래스이다.
+
+RoutingDataSourceContextHolder 클래스에서 쓰레드에 연결할 커넥션을 지정하면
+determineTargetDataSource 메소드에서 커넥션 객체를 결정해준다.
 
 ```java
 @RequiredArgsConstructor
@@ -198,3 +208,8 @@ public class RoutingDataSourceUtil {
 
 }
 ```
+
+
+## Reference
+
+어느 선배의 소스코드
