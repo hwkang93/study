@@ -103,6 +103,15 @@ SELECT ST_SRID(ST_GeomFromText('POINT(-71.1043 42.315)',4326));
 
 ### ST_EstimatedExtent
 
+**box2d ST_EstimatedExtent(text schema_name, text table_name, text geocolumn_name, boolean parent_only)**
+**box2d ST_EstimatedExtent(text schema_name, text table_name, text geocolumn_name)**
+**box2d ST_EstimatedExtent(text table_name, text geocolumn_name)**
+
+- 공간 테이블의 예상 범위를 box2d 형태로 저장한다.
+  - box2d : BOX(xmin, ymin, xmax, ymax) 형태의 오브젝트
+- ST_EXTENT 함수보다 속도적인 측면에서 훨씬 유리하다.
+- 지오서버에서 BBOX 를 조회하는 데 사용된다.
+
 ```
 ST_EstimatedExtent 결과가 null 이 나오는 경우
 
@@ -121,6 +130,23 @@ ST_EstimatedExtent 함수는 경계 상자를 계산하기 위해 공간 데이�
 공간 데이터에 오류가 있는 경우
 ST_EstimatedExtent 함수는 공간 데이터에 대해 오류를 검증하지 않습니다. 따라서 공간 데이터에 오류가 있는 경우에는 함수가 NULL을 반환할 수 있습니다.
 ```
+
+
+> ###  ST_EstimatedExtent + 좌표변환
+> 
+> 다음은 ST_EstimatedExtent 함수로 조회한 BBOX 영역의 좌표를 변환하는 예제 쿼리이다.
+> 
+> ```sql
+> WITH bbox AS (   
+>   SELECT public.ST_Transform(public.st_setsrid(public.ST_EstimatedExtent(#{스키마명}, #{테이블명}, #{좌표컬럼명}), #{테이블에정의된좌표계}::int),#{변환할좌표계}::int) AS bbox   
+> )   
+> SELECT   
+>   public.ST_Xmin(bbox.bbox) AS xmin,   
+>   public.ST_Ymin(bbox.bbox) AS ymin,   
+>   public.ST_Xmax(bbox.bbox) AS xmax,   
+>   public.ST_Ymax(bbox.bbox) AS ymax   
+> FROM bbox;
+> ``` 
 
 
 ### ST_EXTENT
