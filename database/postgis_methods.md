@@ -103,6 +103,26 @@ SELECT ST_SRID(ST_GeomFromText('POINT(-71.1043 42.315)',4326));
 
 ### ST_EstimatedExtent
 
+```
+ST_EstimatedExtent 결과가 null 이 나오는 경우
+
+데이터가 없는 경우
+ST_EstimatedExtent 함수는 특정 테이블 또는 뷰의 공간 데이터의 경계 상자를 추정합니다. 하지만 데이터가 전혀 없는 경우에는 결과가 NULL이 됩니다.
+
+공간 데이터의 SRID가 설정되어 있지 않은 경우
+ST_EstimatedExtent 함수는 공간 데이터의 SRID (Spatial Reference ID)를 기반으로 경계 상자를 계산합니다. SRID가 설정되어 있지 않은 경우 함수가 NULL을 반환합니다. SRID를 설정하려면 ALTER TABLE 구문을 사용하여 공간 컬럼에 SRID를 할당해야 합니다.
+
+인덱스가 생성되어 있지 않은 경우
+ST_EstimatedExtent 함수는 인덱스를 사용하여 경계 상자를 계산합니다. 따라서 인덱스가 생성되어 있지 않은 경우에는 함수가 NULL을 반환할 수 있습니다. 인덱스를 생성하려면 CREATE INDEX 구문을 사용하여 공간 인덱스를 생성해야 합니다.
+
+데이터의 크기가 너무 작은 경우
+ST_EstimatedExtent 함수는 경계 상자를 계산하기 위해 공간 데이터의 크기를 기반으로 합니다. 데이터의 크기가 너무 작은 경우에는 결과가 부정확하거나 NULL이 될 수 있습니다.
+
+공간 데이터에 오류가 있는 경우
+ST_EstimatedExtent 함수는 공간 데이터에 대해 오류를 검증하지 않습니다. 따라서 공간 데이터에 오류가 있는 경우에는 함수가 NULL을 반환할 수 있습니다.
+```
+
+
 ### ST_EXTENT
 
 
