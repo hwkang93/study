@@ -34,3 +34,121 @@ Decorator 클래스를 상속받아 구현하는 클래스이다. 이 클래스�
 데코레이터 패턴은 상속을 사용하지 않고도 객체의 기능을 확장할 수 있는 장점을 제공한다. 
 또한, 데코레이터는 독립적으로 추가하거나 제거할 수 있으므로 객체의 동작을 유연하게 변경할 수 있다. 그러나 데코레이터 패턴을 오용하면 코드가 복잡해질 수 있으므로 적절하게 사용해야 한다.
 
+## 예제 소스코드
+
+다음은 예제 소스코드이다. 데코레이터 패턴의 가장 대표적인 커피 주문 시스템을 구현하고, 커피에 추가적인 옵션을 적용하는 예제이다.
+
+1. 먼저 커피 주문 시스템의 기본 컴포넌트를 정의한다.
+
+```java
+// 커피 주문 시스템 인터페이스
+public interface Coffee {
+    double getCost();
+    String getDescription();
+}
+```
+
+2. 기본 커피를 나타내는 클래스로, ```Coffee``` 인터페이스를 구현한다.
+
+```java
+// 기본 커피
+public class SimpleCoffee implements Coffee {
+    @Override
+    public double getCost() {
+        return 2.0;
+    }
+
+    @Override
+    public String getDescription() {
+        return "Simple Coffee";
+    }
+}
+```
+
+3. 데코레이터의 기반이 되는 추상 클래스로, ```Coffee``` 인터페이스를 구현하고 내부에 ```Coffee``` 객체를 감싸는 역할을 한다.
+
+```java
+// 커피 데코레이터
+public abstract class CoffeeDecorator implements Coffee {
+    protected Coffee decoratedCoffee;
+
+    public CoffeeDecorator(Coffee coffee) {
+        this.decoratedCoffee = coffee;
+    }
+
+    @Override
+    public double getCost() {
+        return decoratedCoffee.getCost();
+    }
+
+    @Override
+    public String getDescription() {
+        return decoratedCoffee.getDescription();
+    }
+}
+```
+
+4. 실제 데코레이터들로, 각각 우유와 설탕을 추가하는 역할을 한다.
+
+```java
+// 우유 데코레이터
+public class MilkDecorator extends CoffeeDecorator {
+    public MilkDecorator(Coffee coffee) {
+        super(coffee);
+    }
+
+    @Override
+    public double getCost() {
+        return super.getCost() + 0.5;
+    }
+
+    @Override
+    public String getDescription() {
+        return super.getDescription() + ", Milk";
+    }
+}
+
+// 설탕 데코레이터
+public class SugarDecorator extends CoffeeDecorator {
+    public SugarDecorator(Coffee coffee) {
+        super(coffee);
+    }
+
+    @Override
+    public double getCost() {
+        return super.getCost() + 0.2;
+    }
+
+    @Override
+    public String getDescription() {
+        return super.getDescription() + ", Sugar";
+    }
+}
+```
+
+5. 데코레이터 패턴을 사용하여 커피에 추가적인 옵션을 적용하는 방법이다.
+
+```java
+public class Main {
+    public static void main(String[] args) {
+        // 기본 커피 주문
+        Coffee coffee = new SimpleCoffee();
+        System.out.println("Cost: " + coffee.getCost() + ", Description: " + coffee.getDescription());
+
+        // 우유를 추가한 커피 주문
+        Coffee coffeeWithMilk = new MilkDecorator(new SimpleCoffee());
+        System.out.println("Cost: " + coffeeWithMilk.getCost() + ", Description: " + coffeeWithMilk.getDescription());
+
+        // 설탕을 추가한 커피 주문
+        Coffee coffeeWithSugar = new SugarDecorator(new SimpleCoffee());
+        System.out.println("Cost: " + coffeeWithSugar.getCost() + ", Description: " + coffeeWithSugar.getDescription());
+
+        // 우유와 설탕을 추가한 커피 주문
+        Coffee coffeeWithMilkAndSugar = new SugarDecorator(new MilkDecorator(new SimpleCoffee()));
+        System.out.println("Cost: " + coffeeWithMilkAndSugar.getCost() + ", Description: " + coffeeWithMilkAndSugar.getDescription());
+    }
+}
+```
+
+위의 예제에서는 커피 주문 시스템을 구현하고, 데코레이터 패턴을 사용하여 커피에 우유와 설탕을 추가하는 기능을 구현했다.
+데코레이터 패턴을 사용하면 컴포넌트에 동적으로 기능을 추가할 수 있으며, 기존 코드 변경 없이도 새로운 기능을 쉽게 조합할 수 있다.
