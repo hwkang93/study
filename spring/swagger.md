@@ -420,6 +420,10 @@ implementation 'io.swagger:swagger-annotations:1.5.21'
 implementation 'io.swagger:swagger-models:1.5.21'
 ```
  
+## Swagger-UI 에서 발행한 이슈
+
+응답 객체가 동일한 두 개의 API 는 Swagger 에서 응답 객체를 정상적으로 표출하지 못하는 이슈가 있다.(2.9.2 기준)
+
 
 ## Reference
 
