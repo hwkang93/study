@@ -422,7 +422,17 @@ implementation 'io.swagger:swagger-models:1.5.21'
  
 ## Swagger-UI 에서 발행한 이슈
 
-응답 객체가 동일한 두 개의 API 는 Swagger 에서 응답 객체를 정상적으로 표출하지 못하는 이슈가 있다.(2.9.2 기준)
+응답 객체가 동일한(정확히 말하면 @ApiModel 어노테이션의 value 를 지칭) 두 개의 API 는 Swagger 에서 응답 객체를 정상적으로 표출하지 못하는 이슈가 있다.(2.9.2 기준)
+
+> **Chat GPT 에서의 대답**
+> 
+> Swagger에서는 Response Object의 이름이 중복되면 안 됩니다. Response Object는 각각 고유한 이름을 가져야 하며, 
+> 이름은 Swagger 문서에서 해당 Response Object를 식별하는 데 사용됩니다. 따라서 중복된 Response Object 이름은 Swagger 스펙을 위반하며, 오류를 유발할 수 있습니다.
+> Response Object를 사용하여 다양한 응답 유형을 정의할 수 있습니다. 
+> Swagger에서는 각 응답에 대한 고유한 Response Object를 정의하고, 해당 응답에 대한 상태 코드를 매핑합니다. 
+> 예를 들어, 200 상태 코드에 대한 응답은 "200 OK"라는 이름의 Response Object를 사용하여 정의할 수 있습니다.
+> 따라서 Swagger에서 Response Object를 정의할 때, 이름이 중복되지 않도록 유의해야 합니다. 중복된 이름을 사용해야 하는 경우, 
+> 이름을 조정하여 고유한 이름으로 변경해야 합니다.
 
 
 ## Reference
