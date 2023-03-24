@@ -1,7 +1,7 @@
-# GeoServer 에서 View 를 발행했을 때의 Geometry 타입에 대하여
+# GeoServer 에서 PostgreSQL View 를 발행했을 때의 Geometry 타입에 대하여
 
-폴리곤의 중심점, 혹은 지리정보 연산 등의 결과를 view 로 만들어 그 view 자체를 GeoServer 에 레이어로 발행할 일이 종종 있다.
-예를 들어 폴리곤의 중심점을 view 로 만드는 쿼리를 view 로 만들 수 있는데, 예를 들면 아래와 같은 쿼리이다.
+폴리곤의 중심점, 혹은 지리정보 연산 등의 결과를 PostgreSQL view 로 만들어 그 view 자체를 GeoServer 에 레이어로 발행할 일이 종종 있다.
+예를 들어 폴리곤의 중심점을 PostgreSQL view 로 만드는 쿼리를 PostgreSQL view 로 만들 수 있는데, 예를 들면 아래와 같은 쿼리이다.
 
 ```sql
 create view public.polygon_example_view as

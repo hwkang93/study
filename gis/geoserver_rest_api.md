@@ -1,8 +1,7 @@
+# Java 에서 GeoSever 로 API 요청 날리는 예제 소스코드
+
 
 요청 URL + .format (xml, json 등)
-
-
-
 
 
 ```java
