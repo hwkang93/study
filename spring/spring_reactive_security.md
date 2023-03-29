@@ -83,10 +83,3 @@ public SecurityWebFilterChain securityFilterChain(ServerHttpSecurity http) {
             .build();
 }
 ```
-
-AuthenticationWebFilter 객체를 커스터마이징해서 사용하고 싶다.
-
-새로운 AuthenticationWebFilter 객체를 만들어 .addFilterAt 메소드에 추가하면 해당 필터는 securityFilterChain 메소드에서 정의한 설정값 적용을 받지 못한다.
-그렇기 떄문에 모든 설정 정보를 재정의해줘야 한다.(고 한다..)
-
-참고 : https://stackoverflow.com/questions/47354171/spring-webflux-custom-authentication-for-api
