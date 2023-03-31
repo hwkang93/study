@@ -19,6 +19,65 @@
 - 클래스 간의 관계와 코드가 꼬여버릴 염려가 있다.
 
 
+```java
+abstract class Game {
+    abstract void initialize();
+    abstract void startPlay();
+    abstract void endPlay();
+ 
+    public final void play(){
+        // 게임 초기화
+        initialize();
+ 
+        // 게임 시작
+        startPlay();
+ 
+        // 게임 종료
+        endPlay();
+    }
+}
+ 
+class Football extends Game {
+    void initialize() {
+        System.out.println("Football Game Initialized! Start playing.");
+    }
+ 
+    void startPlay() {
+        System.out.println("Football Game Started. Enjoy the game!");
+    }
+ 
+    void endPlay() {
+        System.out.println("Football Game Finished!");
+    }
+}
+ 
+class Basketball extends Game {
+    void initialize() {
+        System.out.println("Basketball Game Initialized! Start playing.");
+    }
+ 
+    void startPlay() {
+        System.out.println("Basketball Game Started. Enjoy the game!");
+    }
+ 
+    void endPlay() {
+        System.out.println("Basketball Game Finished!");
+    }
+}
+ 
+class Client {
+    public static void main(String[] args) {
+        Game game = new Football();
+        game.play();
+        
+        System.out.println();
+        
+        game = new Basketball();
+        game.play();
+    }
+}
+```
+
 ## Reference
 
 [디자인패턴-템플릿 메소드 패턴 - YABOONG](https://yaboong.github.io/design-pattern/2018/09/27/template-method-pattern/)
