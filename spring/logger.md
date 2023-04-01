@@ -80,6 +80,79 @@ LoggerFactory.java , StaticLoggerBinder.java 확인
 연산만 수행하고 로그를 출력하지않는다.(불필요한 연산 발생)
 그렇기에 괄호를 사용한 로그 출력을 사용해야한다. 
 
+-----------------------------------
+
+## 지양해야 할 로그 작성법
+
+```java.lang.System.out``` ```java.lang.System.err``` 을 사용해 로그를 기록하는 것은 좋은 습관이 아니다.
+```e.printStackTrace()``` 는 내부적으로 ```java.lang.System.err``` 클래스를 사용한다.
+
+```java
+System.out.println("사용자 정보 : " + userId);
+```
+
+```java
+try {
+    //...
+} catch (Exception e) {
+	e.printStackTrace();
+}
+
+```
+
+```java.lang.System``` 을 사용해 로그를 기록하는 것이 왜 안좋은 습관인지 먼저 확인해보자.
+
+### 휘발성
+
+```System.out.println``` 은 로그가 표준 출력으로 출력된다. 파일로 저장되지 않고 휘발된다는 의미이다.
+로그의 목적 중 하나는 에러가 발생한 상황을 기록하고, 기록을 통해 문제를 진단하고, 해결하기 위함인데
+저장되지 않는 정보는 로그로써의 목적을 잃었다고 할 수 있다.
+
+### 로그 레벨 관리 불가
+
+로컬에서 개발할 때에는 디버깅을 위한 아주 상세한 정보가 출력되어 확인할 수 있어야 한다.
+하지만, 프로덕션에서 동작하는 코드는 에러/장애가 발생할 때 문제를 진단할 수 있는 정보만을 남겨야 한다.
+개발시에만 사용되는 정보와 문제 상황에 대한 정보가 함께 로깅된다면 문제 해결을 위한 정작 중요한 정보를 얻기 힘들 뿐더러, 민감한 정보를 로그로 남길수도 있기 때문이다.
+또한 의미없는 로그가 쌓여 서버 용량을 차지할 수도 있다.   
+따라서 로깅 라이브러리는 환경에 맞게(로컬 개발 환경, 개발 서버, 프로덕션 서버 등) 로그가 출력될 수 있도록 로그 출력 레벨이라는 기능을 제공한다.
+많이 사용되는 Logback이라는 라이브러리에서는 TRACE, DEBUG, INFO, WARN, ERROR, FATAL 와 같은 레벨을 제공한다.
+하지만 System.out.println() 은 이런 기능을 제공하지 않는다.
+어떤 환경에서든 동일한 로그가 출력된다. 프로덕션에서 이런 로그를 제거하려면 코드를 일일히 제거하거나 주석처리하거나 별도의 조건문을 설정하는 등 번거로운 일들을 해야한다.
+
+### 성능 저하 가능성
+다음은 ```System.out.println()``` 의 코드이다.
+```java
+/**
+* Terminates the current line by writing the line separator string.  The
+* line separator string is defined by the system property
+* {@code line.separator}, and is not necessarily a single newline
+* character ({@code '\n'}).
+  */
+public void println() {
+  newLine();
+}
+```
+
+
+```println()``` 은 ```newLine()``` 을 호출한다.   
+다음은 ```newLine()``` 코드이다.
+
+```java
+private void newLine() {
+    try {
+        synchronized (this) {
+            ensureOpen();
+            textOut.newLine();
+            // ...
+```
+
+내부적으로 ```synchronized``` 를 사용한다. 이때 newLine() 메소드는 임계영역(critical section)이 된다.
+멀티 쓰레드 환경에서 A 쓰레드가 newLine() 메소드를 실행하면, 메소드는 잠기게 된다.
+다른 쓰레드는 A 쓰레드가 모두 사용하고 잠금을 풀어준 뒤에서야 newLine() 메소드를 실행할 수 있다. 
+**오버헤드가 발생**하게 되는 것이다.
+
+스프링을 실행하는 톰캣은 멀티 쓰레드로 동작한다. 요청이 오면 쓰레드 풀에서 쓰레드를 하나 가져와 요청을 처리한다.
+그런데, ```System.out.println()``` 을 여러 쓰레드가 사용하면 그만큼 오버헤드가 발생하고 처리가 느려질 것이다.
 
 ## Reference
 
@@ -88,3 +161,7 @@ https://d-memory.tistory.com/31
 https://clack2933.tistory.com/34
 
 https://escapefromcoding.tistory.com/554
+
+https://hudi.blog/do-not-use-system-out-println-for-logging/
+
+http://dveamer.github.io/backend/HowToUseSlf4j.html
