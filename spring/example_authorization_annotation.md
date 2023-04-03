@@ -3,6 +3,18 @@
 API 내에서 권한을 검증하는 예제 소스코드이다.
 
 Authorization 이라는 어노테이션을 생성하고, 올바르지 않은 권한으로 요청하는 경우 403 에러를 리턴한다.   
+
+> **Authorization**
+>
+> 인가. 권한 부여 라는 뜻으로 시스템 리소스에 대한 액세스 수준을 결정하는 데 사용되는 보안 매커니즘을 말한다.   
+> **관리자는 "조회", "쓰기", "삭제" 권한**이 존재하고 **일반 사용자는 "조회" 권한이 존재**한다. 를 예로 들 수 있다.
+> 
+> 비슷하지만 헷갈리는 개념으로 Authentication 가 있다. 인증이라는 뜻으로 시스템을 사용하기 위해 필요한 신원을 확인하는 프로세스를 말한다.
+> 대표적으로 "로그인" 을 예로 들 수 있다.
+> 
+> 참고로 권한 검증(Authorization) 실패에 대한 에러 코드는 403(Forbidden) 을,
+> 사용자 인증(Authentication) 에 실패한 에러 코드는 401(Unauthorized) 을 주로 사용한다.
+
 예제 소스코드는 다음 요구사항을 통해 구현되었다.
 
 - 정상적인 모든 API 요청은 CommonRequestDTO 객체를 파라미터로 받는다.
@@ -23,6 +35,66 @@ public @interface Authorization {
     Role[] allowRoles() default Role.ALL;
 }
 ```
+
+```CommonRequestDTO.java```
+
+```java
+@Getter @Setter
+public class CommonRequestDTO {
+
+    private String sessionUserId;
+    
+    private String sessionInsttCode;
+    
+    private String sessionUserSeCode;
+    
+}
+```
+
+```java
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+public enum UserSeCode {
+    INSTT_USER1("11","1"),   //LV1. 일반사용자
+    INSTT_USER2("12","2"),  //LV2. 실무담당자
+    INSTT_USER3("13","3"),  //LV3. 중간관리자
+
+    INSTT_ADMIN("14","4"),  //LV4. 기관관리자
+
+    MAPPICK_ADMIN("4","맵픽 관리자");    //맵픽관리자
+
+    private String detailCode;
+    private String detailCodeNm;
+
+    public static UserSeCode of(String code) {
+        return Arrays.asList(UserSeCode.values())
+                .stream()
+                .filter(useSeCode -> useSeCode.detailCode.equals(code))
+                .findFirst()
+                .orElse(null);
+    }
+}
+```
+
+```java
+@AllArgsConstructor
+@Getter
+public enum Role {
+
+    MAPPICK_ADMIN(Arrays.asList(UserSeCode.MAPPICK_ADMIN)),
+
+    INSTT_ADMIN(Arrays.asList(UserSeCode.INSTT_USER3)),
+
+    INSTT_USER(Arrays.asList(UserSeCode.INSTT_USER1, UserSeCode.INSTT_USER2, UserSeCode.INSTT_USER3)),
+
+    ALL(Arrays.asList(UserSeCode.INSTT_USER1, UserSeCode.INSTT_USER2, UserSeCode.INSTT_USER3, UserSeCode.MAPPICK_ADMIN));
+
+    private List<UserSeCode> userSeCodeList;
+    
+}
+```
+
 
 ```AuthorizationException.java```
 
