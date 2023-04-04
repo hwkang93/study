@@ -15,11 +15,67 @@ Authorization 이라는 어노테이션을 생성하고, 올바르지 않은 권
 > 참고로 권한 검증(Authorization) 실패에 대한 에러 코드는 403(Forbidden) 을,
 > 사용자 인증(Authentication) 에 실패한 에러 코드는 401(Unauthorized) 을 주로 사용한다.
 
+
 예제 소스코드는 다음 요구사항을 통해 구현되었다.
 
-- 정상적인 모든 API 요청은 CommonRequestDTO 객체를 파라미터로 받는다.
+- 정상적인 모든 API 요청의 파라미터에는 CommonRequestDTO 의 필드들이 존재한다.
 - 비로그인 사용자의 경우 CommonRequestDTO 의 필드들이 "!GUEST" 라는 값으로 되어있다.
+- 로그인한 모든 사용자는 "사용자 코드"를 가지고 있다. 사용자 코드는 LV1, LV2, LV3, ADMIN, PORTAL_ADMIN 으로 구분한다.
+- 사용자 코드 별로 역할이 있으며 LV1, LV2, LV3 를 "일반 사용자", ADMIN 을 "관리자", PORTAL_ADMIN 을 "슈퍼관리자" 라고 정의한다.
+- 모든 API 는 역할 별로 접근 여부를 판단한다.
 
+## 구현
+
+먼저 사용자 코드와 롤을 정의한다.   
+사용자 코드는 enum 클래스로 구현한다. 아래 예제에서는 LV1, LV2, LV3, ADMIN, PORTAL_ADMIN 으로 구분한다.
+
+```java
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+public enum UserCode {
+    LV1("11","1"),   //LV1. 일반사용자
+    INSTT_USER2("12","2"),   //LV2. 실무담당자
+    INSTT_USER3("13","3"),   //LV3. 중간관리자
+
+    INSTT_ADMIN("14","4"),  //LV4. 기관관리자
+
+    MAPPICK_ADMIN("4","맵픽 관리자");    //맵픽관리자
+
+    private String detailCode;
+    private String detailCodeNm;
+
+    public static UserCode of(String code) {
+        return Arrays.asList(UserCode.values())
+                .stream()
+                .filter(useSeCode -> useSeCode.detailCode.equals(code))
+                .findFirst()
+                .orElse(null);
+    }
+}
+```
+
+
+먼저 Role 을 정의한다.
+
+
+```java
+@AllArgsConstructor
+@Getter
+public enum Role {
+
+    MAPPICK_ADMIN(Arrays.asList(UserCode.MAPPICK_ADMIN)),
+
+    INSTT_ADMIN(Arrays.asList(UserCode.INSTT_USER3)),
+
+    INSTT_USER(Arrays.asList(UserCode.LV1, UserCode.INSTT_USER2, UserCode.INSTT_USER3)),
+
+    ALL(Arrays.asList(UserCode.LV1, UserCode.INSTT_USER2, UserCode.INSTT_USER3, UserCode.MAPPICK_ADMIN));
+
+    private List<UserCode> userCodeList;
+    
+}
+```
 
 ```Authorization.java```
 ```java
@@ -28,7 +84,7 @@ Authorization 이라는 어노테이션을 생성하고, 올바르지 않은 권
 public @interface Authorization {
 
     /**
-     * 요청 객체(CommonRequestDTO)에 세션 객체가 있는지 확인합니다.<br/>
+     * 요청 객체(CommonRequestDTO)에 세션 정보가 있는지 확인한다.
      */
     boolean sessionRequired() default false;
 
@@ -46,56 +102,12 @@ public class CommonRequestDTO {
     
     private String sessionInsttCode;
     
-    private String sessionUserSeCode;
+    private String sessionUserCode;
     
 }
 ```
 
-```java
-@Getter
-@AllArgsConstructor
-@NoArgsConstructor
-public enum UserSeCode {
-    INSTT_USER1("11","1"),   //LV1. 일반사용자
-    INSTT_USER2("12","2"),  //LV2. 실무담당자
-    INSTT_USER3("13","3"),  //LV3. 중간관리자
-
-    INSTT_ADMIN("14","4"),  //LV4. 기관관리자
-
-    MAPPICK_ADMIN("4","맵픽 관리자");    //맵픽관리자
-
-    private String detailCode;
-    private String detailCodeNm;
-
-    public static UserSeCode of(String code) {
-        return Arrays.asList(UserSeCode.values())
-                .stream()
-                .filter(useSeCode -> useSeCode.detailCode.equals(code))
-                .findFirst()
-                .orElse(null);
-    }
-}
-```
-
-```java
-@AllArgsConstructor
-@Getter
-public enum Role {
-
-    MAPPICK_ADMIN(Arrays.asList(UserSeCode.MAPPICK_ADMIN)),
-
-    INSTT_ADMIN(Arrays.asList(UserSeCode.INSTT_USER3)),
-
-    INSTT_USER(Arrays.asList(UserSeCode.INSTT_USER1, UserSeCode.INSTT_USER2, UserSeCode.INSTT_USER3)),
-
-    ALL(Arrays.asList(UserSeCode.INSTT_USER1, UserSeCode.INSTT_USER2, UserSeCode.INSTT_USER3, UserSeCode.MAPPICK_ADMIN));
-
-    private List<UserSeCode> userSeCodeList;
-    
-}
-```
-
-
+ 
 ```AuthorizationException.java```
 
 ```java
@@ -130,8 +142,8 @@ public class AuthorizationAspect {
 
                 //세션 기관 코드가 허용된 권한이 아니면 403
                 //예를 들어 기관관리자만 사용할 수 있는 API 를 기관사용자가 요청한 경우 false
-                String userSeCode = commonRequestDTO.getSessionUserSeCode();
-                if(!authorized(roles, userSeCode)) {
+                String userCode = commonRequestDTO.getSessionUserCode();
+                if(!authorized(roles, userCode)) {
                     throw new AuthenticationException();
                 }
             }
@@ -145,27 +157,27 @@ public class AuthorizationAspect {
 
         String sessionInsttCode = requestDTO.getSessionInsttCode();
         String sessionUserId = requestDTO.getSessionUserId();
-        String sessionUserSeCode = requestDTO.getSessionUserSeCode();
+        String sessionUserCode = requestDTO.getSessionUserCode();
 
         log.debug("User guest check");
         log.debug("  => sessionInsttCode : " + sessionInsttCode);
         log.debug("  => sessionUserId : " + sessionUserId);
-        log.debug("  => sessionUserSeCode : " + sessionUserSeCode);
+        log.debug("  => sessionUserCode : " + sessionUserCode);
 
-        return guest.equals(sessionInsttCode) || guest.equals(sessionUserId) || guest.equals(sessionUserSeCode);
+        return guest.equals(sessionInsttCode) || guest.equals(sessionUserId) || guest.equals(sessionUserCode);
     }
 
 
-    private boolean authorized(Role[] allowRoles, String userSeCode) {
+    private boolean authorized(Role[] allowRoles, String userCode) {
         for(Role role : allowRoles) {
             if(role == Role.ALL) {
                 return true;
             }
 
-            List<UserSeCode> userSeCodeList = role.getUserSeCodeList();
-            boolean hasRole = userSeCodeList.stream()
-                    .map(UserSeCode::getDetailCode)
-                    .map(detailCode -> detailCode.equals(userSeCode))
+            List<UserCode> userCodeList = role.getUserCodeList();
+            boolean hasRole = userCodeList.stream()
+                    .map(UserCode::getDetailCode)
+                    .map(detailCode -> detailCode.equals(userCode))
                     .findAny().orElse(false);
 
             if(hasRole) {
