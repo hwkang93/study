@@ -154,6 +154,88 @@ private void newLine() {
 스프링을 실행하는 톰캣은 멀티 쓰레드로 동작한다. 요청이 오면 쓰레드 풀에서 쓰레드를 하나 가져와 요청을 처리한다.
 그런데, ```System.out.println()``` 을 여러 쓰레드가 사용하면 그만큼 오버헤드가 발생하고 처리가 느려질 것이다.
 
+
+## 로그 프레임워크 사용
+
+```System.out``` 을 사용해 로그를 출력하는 것은 로그로써의 목적을 위해서나 관리의 편의성을 위해서나 성능을 위해서나 지양해야 한다.
+그리고 logback 프레임워크나, log4j 와 같은 로그 프레임워크 사용을 권장한다. 다음은 로그 프레임워크를 사용해 올바른 로그를 작성하는 방법이다.
+
+### 하나의 파라미터가 있는 경우
+
+아래 4개의 방법은 모두 동일한 결과를 출력한다. 그리고 INFO, WARN, ERROR 로그 레벨 처럼 DEBUG 보다 상위 레벨일 경우
+4개 방법 모두 출력이 일어나지 않는다. 그럼에도 불구하고 어떤 경우는 성능에 부정적인 영향을 미친다.
+
+```java
+private void bindOneParameter(String userName) {
+
+    // poor performance, poor readability
+    logger.debug("Hello " + userName + ".");
+
+    // always good performance, poor readability
+    if(logger.isDebugEnabled()) {
+        logger.debug("Hello " + userName + ".");
+    }
+
+    // always good performance, good readability
+    if(logger.isDebugEnabled()) {
+        logger.debug("Hello {}.", userName);
+    }
+
+    // good performance, best readability - I recommend this.
+    logger.debug("Hello {}.", userName);
+}
+```
+
+#### 문자열 직접 연산 방법
+
+```java
+// poor performance, poor readability
+logger.debug("Hello " + userName + ".");
+```
+
+가용 로그 레벨을 DEBUG 에서 INFO 로 조절하면 로그가 남는 과정이 생략되기 때문에 성능 개선을 할 수 있다.
+하지만 ```logger.debug()``` 메소드가 실행되기 전에 ```"Hello " + userName + "."``` 이라는 문자열 연산이 먼저 일어나기 때문에
+문자열 연산 만큼의 성능 악화가 발생한다.   
+```+``` 와 같은 문자열 연산만의 문제가 아니라 ```logger.debug()``` 메소드 실행 이전에 어떠한 연산이라도 일어나게 되면 동일한 낭비가 발생하게 된다.
+
+#### 가용 로그 레벨 체크
+
+```java
+// always good performance, poor readability
+if(logger.isDebugEnabled()) {
+    logger.debug("Hello " + userName + ".");
+}
+```
+
+가용 로그 레벨이 INFO 라면, ```logger.debug()``` 메소드가 실행되지 않을 뿐만 아니라 문자열 연산도 일어나지 않기 때문에 성능 낭비가 없다.
+
+#### 가용 로그 레벨 체크 & SLF4J 치환문자 사용
+
+```java
+// always good performance, good readability
+if(logger.isDebugEnabled()) {
+    logger.debug("Hello {}.", userName);
+}
+```
+
+두번째 방법과 동일하게 성능 낭비가 없으며, SLF4J 의 치환문자 ```{}``` 를 이용해 가독성도 높일 수 있다.
+
+#### SLF4J 치환문자 사용
+
+```java
+// good performance, best readability - I recommend this.
+logger.debug("Hello {}.", userName);
+```
+
+먼저 첫번째 방법과 비교하면 ```logger.debug()``` 메소드가 실행되기 전에 ```+``` 와 같은 연산은 없어서 성능 개선이 이루어졌으며 로그의 가독성도 올라갔다.
+
+세 번째 방법과 비교하면 ```"Hello {}."``` 문자열 생성과 같은 연산이 발생하기 때문에 성능이 약간 떨어진다.
+
+그리고 ```logger.debug()``` 메소드는 실행되지만 해당 메소드 내에서 가장 먼저 가용 로그 레벨을 체크하는 과정이 가장 먼저 일어나기 때문에 
+```Object.toString()```과 같은 추가적인 연산은 발생하지 않는다.
+
+
+
 ## Reference
 
 https://d-memory.tistory.com/31
