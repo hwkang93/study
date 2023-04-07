@@ -234,6 +234,168 @@ logger.debug("Hello {}.", userName);
 그리고 ```logger.debug()``` 메소드는 실행되지만 해당 메소드 내에서 가장 먼저 가용 로그 레벨을 체크하는 과정이 가장 먼저 일어나기 때문에 
 ```Object.toString()```과 같은 추가적인 연산은 발생하지 않는다.
 
+### 두 개의 파라미터가 있는 경우
+
+```java
+private void bindTwoParameters(User user) {
+
+    // poor performance, poor readability
+    logger.debug("Hello " + user.getName() + "(" + user.getEmail() + ")");
+    
+    // poor performance, good readability
+    logger.debug(String.format("Hello %s(%s)", user.getName(), user.getEmail()));
+    
+    // good performance, good readability - I recommend this.
+    logger.debug("Hello {}({}).", user.getName(), user.getEmail());
+}
+```
+
+파라미터가 1개 일때보다 2개의 경우, 가독성이 좋아진 것을 확인할 수 있다.
+그리고 첫번째, 두번째 방법은 앞서 설명했던 것 처럼 문자열 연산이 가장 먼저 일어나기 때문에 성능 악화가 발생한다.
+
+성능과 가독성을 모두 만족시켜주는 세번째의 SLF4J 치환문자 ```{}`` 사용 방법을 권장한다.
+
+### 세 개 이상의 파라미터가 있는 경우
+
+```java
+private void bindManyParameters(User user) {
+
+    // little poor performance, good readability
+    logger.debug("User id : {}, email : {}, job : {}", user.getName(), user.getEmail(), user.getJob());
+
+    // good performance, good readability, uncomfortable
+    logger.debug("User name : {}", user.getName());
+    logger.debug("User email : {}", user.getEmail());
+    logger.debug("User job : {}", user.getJob());
+
+    // good performance, good readability - I recommend this.
+    logger.debug("User : {}", user);
+}
+```
+
+세 방법 모두 SLF4J 의 치환문자 ```{}``` 를 사용하는 방법이다.   
+첫 번째 경우는 파라미터의 개수가 여러개이고, 두번째와 세번째 경우는 파라미터가 1개이다.
+파라미터가 3개 이상이면 가용 로그 레벨을 체크하기 전에 ```Object[]``` 를 생성하는 비용이 발생한다.
+
+> However, this variant incurs the hidden(and relatively small) cost of creating an Object[] before invoking the method, even if this logger is disabled for DEBUG
+ 
+```java
+package org.slf4j;
+
+//...
+
+public interface Logger {
+
+    //...
+
+    /**
+     * Log a message at the DEBUG level according to the specified format
+     * and arguments.
+     * <p/>
+     * <p>This form avoids superfluous string concatenation when the logger
+     * is disabled for the DEBUG level. However, this variant incurs the hidden
+     * (and relatively small) cost of creating an <code>Object[]</code> before invoking the method,
+     * even if this logger is disabled for DEBUG. The variants taking
+     * {@link #debug(String, Object) one} and {@link #debug(String, Object, Object) two}
+     * arguments exist solely in order to avoid this hidden cost.</p>
+     *
+     * @param format    the format string
+     * @param arguments a list of 3 or more arguments
+     */
+    public void debug(String format, Object... arguments);
+
+    //...
+}
+```
+
+그렇기 때문에 최대한 파라미터의 개수를 2개 이하로 맞추기 위해 노력해야 한다.
+
+다만, 두번째 방법은 로그가 한줄에 출력되는 것이 아니라 세줄로 나눠서 출력되기 때문에 로그가 한곳에 모여있지 않을 수 있다.
+다른 쓰레드의 로그가 세줄의 로그 사이에 끼어들게 될 것이다. 만약 파일에 로깅을 하는 상황에서 심할 때는 세줄이 각각 다른 파일에 로깅될 경우도 있을 것이다. 
+그래서 로깅시 함께 남긴 thread id로 검색해서 확인을 해야할 수도 있다.
+
+세번째 방법은 로그도 한줄에 남고 성능도 제일 좋으며 가독성도 좋다.
+User 객체의 Object.toString() 메소드에 대한 override 작업은 필요하다.
+
+```java
+public class User {
+
+    private final String email;
+    private final String name;
+    private final String job;
+    
+    //...
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "email='" + email + '\'' +
+                ", name='" + name + '\'' +
+                ", job='" + job + '\'' +
+                '}';
+    }
+}
+```
+
+### 예외 처리
+
+SLF4J 는 Throwable 객체를 두번째 파라미터로 넘기면 stack trace 를 로깅시켜 준다.
+
+```java
+private void printExceptionStackTrace(User user) {
+
+    try {
+        throw new Exception("Something is wrong.");
+    } catch(Exception ex) {
+
+        // poor information
+        logger.error("", ex);
+
+        // good information - I recommend this.
+        logger.error("User : " + user, ex);
+    }
+}
+```
+
+두 예시는 모두 동일한 stack trace 가 로깅된다.
+
+하지만 첫번째 방법은 stack trace만 남기 때문에 문제 해결에 필요한 정보가 부족하다.
+두번째 방법은 아래와 같이 User 객체의 정보가 함께 로깅 되기 때문에 보다 정확한 상황 파악이 가능하다.
+
+주의할 사항은 **Throwable 객체가 반드시 두번째 파라미터로 전달되어야지 stack trace 를 출력한다는 것이다.**
+그래서 문자열 직접 연산을 통해서 완성된 메시지를 첫번째 파라미터로 넘겨야 한다.
+대부분의 ERROR 로그 레벨은 항상 출력하므로 문자열 직접 연산을 사용 유무와 성능이 관련없다.
+
+
+```java
+private void printExceptionMessage(User user) {
+
+    try {
+        if(user.getName() == null) {
+            throw new IllegalArgumentException("user name is required parameter.");
+        }
+    } catch(IllegalArgumentException ex) {
+
+        // good performance, poor information
+        logger.warn(ex.getMessage());
+
+        // poor performance, good information
+        logger.warn("{} - User : {}", ex.getMessage(), user.toString());
+
+        // good performance, good information - I recommend this.
+        logger.warn("{} - User : {}", ex.getMessage(), user);
+    }
+}
+```
+
+첫번째 방법은 예외 처리 메시지는 잘 기록 되지만 상황에 대한 정보가 부족할 수 있다.
+```ex.getMessage()```의 경우에도 가용 로그 레벨 체크보다 먼저 수행되지만
+일반적인 ```Exception```의 ```getMessage()``` 메소드는 ```getter```의 역할만 하기 때문에 비용 발생이 거의 없다.
+
+두번째 방법은 필요한 정보가 모두 기록되지만 가용 로그 레벨 체크보다 ```user.toString()```이 먼저 수행되기 때문에 성능 낭비가 발생할 수 있다.
+
+세번째 방법은 가용 로그 레벨 체크가 ```user.toStirng()```보다 먼저 수행되기 때문에 성능 낭비가 발생하지 않는다.
+이 경우에도 역시 파라미터는 ```exception을``` 포함해서 2개 이하로 맞추는 습관을 들일 필요가 있다.
 
 
 ## Reference
