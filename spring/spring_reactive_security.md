@@ -172,6 +172,56 @@ public CorsConfigurationSource corsConfigurationSource() {
 개발 과정에서는 모든 설정을 열어두고 개발을 진행해야 했기 때문에 모든 설정을 허용한 상태이다.
 
 
+### (12)
+
+JWT 인증 필터를 추가하는 부분이다. (/auth/** 이외의 모든 요청에서 인증 진행)
+
+```
+.addFilterAt(authenticationWebFilter(), SecurityWebFiltersOrder.AUTHENTICATION)
+```
+
+시큐리티 필터 순서 중 8번에 해당하는 ```AUTHENTICATION``` 자리에 커스텀한 필터로 대체한다.
+
+authenticationWebFilter() 의 구현 부분은 다음과 같다.
+
+```java
+public AuthenticationWebFilter authenticationWebFilter() {
+    JwtTokenAuthenticationWebFilter jwtTokenAuthenticationWebFilter = new JwtTokenAuthenticationWebFilter(jwtTokenProvider);
+    jwtTokenAuthenticationWebFilter.setAuthenticationFailureHandler(new ServerAuthenticationEntryPointFailureHandler(authenticationEntryPoint));
+
+    return jwtTokenAuthenticationWebFilter;
+}
+```
+
+JwtTokenAuthenticationWebFilter 클래스는 직접 구현한 클래스로 AuthenticationWebFilter 클래스를 확장하고 있다.
+
+JWT 관련 Provider 객체를 생성자에 주입시켜주며, 인증 실패 시 예외 핸들러 클래스도 정의한다.
+
+```java
+@Slf4j
+public class JwtTokenAuthenticationWebFilter extends AuthenticationWebFilter {
+
+    private final JwtTokenAuthenticationSuccessHandler jwtTokenAuthenticationSuccessHandler = new JwtTokenAuthenticationSuccessHandler();
+    private final JwtTokenAuthenticationConverter jwtTokenAuthenticationConverter = new JwtTokenAuthenticationConverter();
+
+    public JwtTokenAuthenticationWebFilter(JwtTokenProvider jwtTokenProvider) {
+        super(new JwtTokenAuthenticationManager());
+
+        jwtTokenAuthenticationConverter.setJwtTokenProvider(jwtTokenProvider);
+        super.setServerAuthenticationConverter(jwtTokenAuthenticationConverter);
+        super.setAuthenticationSuccessHandler(jwtTokenAuthenticationSuccessHandler);
+    }
+
+    @Override
+    public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
+        log.debug("{} Jwt Filter [ {} ] {}", exchange.getLogPrefix(), exchange.getRequest().getMethodValue(), exchange.getRequest().getURI());
+
+        return super.filter(exchange, chain);
+    }
+}
+```
+
+
 **Chat GPT 에 따르면..**
 
 
