@@ -50,19 +50,17 @@ Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryDiK1i1O1x8IBp5
 
 서버로 파일을 전송하게 되면 Content-Type 에 boundary 가 추가되어 있음을 알 수 있다. 
 
+이 경우, 데이터를 전송하는 방식이 일반적인 텍스트 데이터와는 다르기 때문에, Ajax 요청을 설정할 때 content-type을 multipart/form-data로 지정해주어야 한다.
 
-이 경우, 데이터를 전송하는 방식이 일반적인 텍스트 데이터와는 다르기 때문에, Ajax 요청을 설정할 때 content-type을 multipart/form-data로 지정해주어야 합니다.
-
-그러나 Ajax는 기본적으로 텍스트 데이터를 전송하기 위해 설계된 기술이기 때문에, multipart/form-data와 같은 바이너리 데이터를 처리하는 능력이 제한적입니다. 
-따라서 multipart/form-data를 사용하는 경우, Ajax에서는 content-type을 false로 설정해야 합니다. 이는 Ajax가 자동으로 데이터를 처리하지 않고, 브라우저가 데이터를 직접 처리하도록 하는 것입니다.
+그러나 Ajax는 기본적으로 텍스트 데이터를 전송하기 위해 설계된 기술이기 때문에, multipart/form-data와 같은 바이너리 데이터를 처리하는 능력이 제한적이다. 
+따라서 multipart/form-data를 사용하는 경우, Ajax가 자동으로 데이터를 처리하지 않고, 브라우저가 데이터를 직접 처리하도록 content-type을 false로 설정해야 한다. 
 
 content-type을 false로 설정하는 것은, Ajax가 요청 헤더에 Content-Type 헤더를 포함시키지 않도록 하여, 
-브라우저가 자동으로 multipart/form-data 형식으로 데이터를 처리하도록 하는 것입니다. 이렇게 함으로써 브라우저는 요청을 multipart/form-data로 처리하고, 
-서버에서는 정상적으로 multipart/form-data로 전송된 데이터를 처리할 수 있게 됩니다.
-
-요약하면, content-type:false를 사용하는 이유는 Ajax가 바이너리 데이터를 처리하는 능력이 제한적이기 때문에, 브라우저가 데이터를 직접 처리하도록 하기 위함입니다. 
-이를 통해 서버는 multipart/form-data 형식으로 전송된 데이터를 정상적으로 처리할 수 있습니다.
+브라우저가 자동으로 multipart/form-data 형식으로 데이터를 처리하도록 하는 것이다. 이렇게 함으로써 브라우저는 요청을 multipart/form-data로 처리하고, 
+서버에서는 정상적으로 multipart/form-data로 전송된 데이터를 처리할 수 있게 된다.
 
 ### ProcessData
 
-AJAX 는 
+AJAX 의 processData 의 디폴트 값은 true 이다. 그러면 AJAX 는 데이터를 서버로 보낼 때 스트링 문자열 형태로 인코딩하여 전송하게 된다. 
+그러나 파일의 경우 쿼리 문자열로 인코딩될 수 없기 때문에 정상적으로 파일이 서버로 전송되지 않는다. 그렇기 때문에 processData 를 false 로 지정하고
+Form 데이터를 통해 서버로 파일을 전송할 수 있다. 
