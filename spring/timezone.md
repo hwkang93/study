@@ -58,8 +58,8 @@ Asia/Seoul
 
 ### k8s yml 파일에서 변경하기
 
-Docker image의 default timezone은 UTC이다. 결국 log도 UTC로 남아 로그를 분석할 때 좋지 않다. 
--Duser.timezone=Asia/Seoul 설정으로 JVM의 timezone을 한국시간으로 변경할 수 있다
+Docker image 의 default timezone 은 UTC 이다. 결국 log 도 UTC 로 남아 로그를 분석할 때 좋지 않다. 
+-Duser.timezone=Asia/Seoul 설정으로 JVM의 timezone 을 한국시간으로 변경할 수 있다
 
 ```yaml
 containers:
