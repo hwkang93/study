@@ -1,4 +1,49 @@
+LC MAY 10
+
 # Redis
+
+
+## redis-cli 명령어
+
+- 
+
+```shell
+# 접속
+# localhost:6379 로 접속
+redis-cli
+
+# {호스트명}:{포트명} 으로 접속
+redis-cli -h {호스트명} -p {포트명}
+```
+
+redis-cli 에 접속해있다면 아래부터는 redis-cli 생략이 가능하다.
+
+```shell
+## 정보 조회
+redis-cli info
+
+## 모니터링
+redis-cli monitor
+
+## 모든 key 검색
+redis-cli keys *
+
+## key 의 잔류 시간 확인
+redis-cli ttl {키}
+
+## key 에 맞는 value 조회
+redis-cli get {키}
+
+## key 존재 여부 확인
+redis-cli exists {키}
+
+## key 의 타입 조회
+redis-cli type {키}
+
+## 모든 key 삭제
+redis-cli FLUSHALL
+```
+
 
 ## 오류
 
@@ -18,5 +63,7 @@
 
 
 ## Reference
+
+https://freeblogger.tistory.com/10
 
 https://m.blog.naver.com/newwodudrj/221376339003
