@@ -1,11 +1,8 @@
-LC MAY 10
-
 # Redis
 
 
-## redis-cli 명령어
 
-- 
+## redis-cli 명령어
 
 ```shell
 # 접속
@@ -33,6 +30,7 @@ redis-cli ttl {키}
 
 ## key 에 맞는 value 조회
 redis-cli get {키}
+redis-cli hgetall {키}
 
 ## key 존재 여부 확인
 redis-cli exists {키}
