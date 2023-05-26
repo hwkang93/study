@@ -1,6 +1,6 @@
 # JPA 의 @EmbeddedId
 
-
+다중 키 매핑을 할 때 사용하는 어노테이션이다.
 
 ### @MapsId
 
