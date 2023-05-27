@@ -48,3 +48,8 @@ private Cookie createGuestCookie(String guestID) {
 ### 쿠키는 브라우저에 저장되잖아. 그런데 왜 document.cookie 에서 몇 개만 보이는 거야?
 
 쿠키를 생성할 때 HttpOnly 를 true 로 설정하면 자바스크립트의 document.cookie 명령어로 쿠키를 조회하더라도, 쿠키가 정상적으로 조회되지 않는다.
+
+크롬을 기준으로 브라우저에 저장된 쿠키 목록을 조회하는 방법이다. 다른 브라우저도 크롬과 비슷하다.
+1. F12 를 눌러 개발자 도구 창을 연다.
+2. 상단의 Application 탭 > 왼쪽 Storage > Cookies 목록을 확인한다.
+3. 브라우저에 저장된 쿠키 목록이 표출된다.
