@@ -53,3 +53,55 @@ private Cookie createGuestCookie(String guestID) {
 1. F12 를 눌러 개발자 도구 창을 연다.
 2. 상단의 Application 탭 > 왼쪽 Storage > Cookies 목록을 확인한다.
 3. 브라우저에 저장된 쿠키 목록이 표출된다.
+
+
+### 쿠키를 조회해서 갱신시키는데 잘 안돼
+
+쿠키의 경로를 최상위 디렉토리("/")로 만든 경우, cookie.getPath() 메소드로 쿠키의 경로를 조회할 때 null 로 나온다.
+쿠키의 값을 변경시키는 경우 setPath 메소드를 통해 디렉토리를 재정의해줘야 한다.
+
+### 참고 예제 소스
+
+```java
+public static void setCookie(HttpServletRequest request, HttpServletResponse response, String cookieName, String cookieValue, Long maxAge) {
+    Cookie cookie = getCookie(request, cookieName);
+
+    String cookiePath = "/";
+
+    if(cookie != null) {
+        cookie.setPath(cookiePath);
+        cookie.setValue(cookieValue);
+    } else {
+        cookie = new Cookie(cookieName, cookieValue);
+        cookie.setPath(cookiePath);
+        cookie.setSecure(false);
+        cookie.setHttpOnly(false);
+        cookie.setMaxAge(maxAge.intValue());
+    }
+    
+    response.addCookie(cookie);
+}
+
+public static void removeCookie(HttpServletRequest request, HttpServletResponse response, String cookieName) {
+    Cookie cookie = getCookie(request, cookieName);
+    if(cookie != null) {
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+    }
+}
+
+public static Cookie getCookie(HttpServletRequest request, String cookieName) {
+    Cookie[] cookies = request.getCookies();
+    if(cookies == null) {
+        return null;
+    }
+    for(Cookie cookie : cookies)  {
+        if(cookieName.equals(cookie.getName())) {
+            return cookie;
+        }
+    }
+
+    return null;
+}
+```
+
