@@ -38,9 +38,9 @@ public class CustomPropertyPlaceholderConfigurer extends PropertyPlaceholderConf
         super.setLocations(defaultLocation);
 
         try {
-        	String geonProfilesLocation = "file:" + System.getProperty("my.profiles.location");
-        	log.info("외부에 정의된 properties 파일을 참조합니다. location is :: " + geonProfilesLocation);
-            Resource resource = new UrlResource(geonProfilesLocation);
+        	String customProfilesLocation = "file:" + System.getProperty("my.profiles.location");
+        	log.info("외부에 정의된 properties 파일을 참조합니다. location is :: " + customProfilesLocation);
+            Resource resource = new UrlResource(customProfilesLocation);
             if(resource.exists()) {
                 log.info(" location exists");
                 super.setLocations(resource);
@@ -58,6 +58,9 @@ public class CustomPropertyPlaceholderConfigurer extends PropertyPlaceholderConf
 PropertyPlaceholderConfigurer 클래스의 Resource[] 는 가장 마지막에 추가된 Resource 객체를 우선으로 하기 때문에,
 defaultLocation (기존 xml 에 정의된 내용)을 먼저 정의하고, 환경변수로 선언된 경로(my.profiles.location)가 존재하면, 해당 경로를 바라보도록 했다.
 
+또한 defaultLocation 은 프로젝트(war) 내에 있는 프로퍼티 파일이기 때문에, ```ClassPathResource``` 객체를 사용하였고,
+customProfilesLocation 은 프로젝트 외부에 있는 프로퍼티 파일이 때문에 ```UrlResource``` 객체를 사용하였다. 또한 파일이기 때문에 프로토콜을 ```file:``` 로 명시해줬다.
+
 context.xml 은 다음과 같이 바꿔주면 된다.
 
 ```context.xml```
@@ -71,3 +74,4 @@ context.xml 은 다음과 같이 바꿔주면 된다.
 > -Dmy.profiles.location=D:\my.properties
 
 서버의 환경에 따라 톰캣에 선언할 수도 있고, 도커나 쿠버네티스 기반이라면 각 서버의 설정 파일에 선언할 수 있다.
+
