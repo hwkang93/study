@@ -34,9 +34,9 @@ Authorization 이라는 어노테이션을 생성하고, 올바르지 않은 권
 @AllArgsConstructor
 @NoArgsConstructor
 public enum UserCode {
-    LV1("11","1"),   //LV1. 일반사용자
-    INSTT_USER2("12","2"),   //LV2. 실무담당자
-    INSTT_USER3("13","3"),   //LV3. 중간관리자
+    LV1("1","LV1. 일반사용자"),
+    LV2("12","2"),   //LV2. 실무담당자
+    LV3("13","3"),   //LV3. 중간관리자
 
     INSTT_ADMIN("14","4"),  //LV4. 기관관리자
 
@@ -55,10 +55,6 @@ public enum UserCode {
 }
 ```
 
-
-먼저 Role 을 정의한다.
-
-
 ```java
 @AllArgsConstructor
 @Getter
@@ -66,11 +62,11 @@ public enum Role {
 
     MAPPICK_ADMIN(Arrays.asList(UserCode.MAPPICK_ADMIN)),
 
-    INSTT_ADMIN(Arrays.asList(UserCode.INSTT_USER3)),
+    INSTT_ADMIN(Arrays.asList(UserCode.LV3)),
 
-    INSTT_USER(Arrays.asList(UserCode.LV1, UserCode.INSTT_USER2, UserCode.INSTT_USER3)),
+    INSTT_USER(Arrays.asList(UserCode.LV1, UserCode.LV2, UserCode.LV3)),
 
-    ALL(Arrays.asList(UserCode.LV1, UserCode.INSTT_USER2, UserCode.INSTT_USER3, UserCode.MAPPICK_ADMIN));
+    ALL(Arrays.asList(UserCode.LV1, UserCode.LV2, UserCode.LV3, UserCode.MAPPICK_ADMIN));
 
     private List<UserCode> userCodeList;
     
