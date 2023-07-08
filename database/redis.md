@@ -1,6 +1,8 @@
 # Redis
 
-
+레디스(Redis)는 Remote Dictionary Server 의 약자로서, "키-값" 구조의 비정형 데이터를 저장하고 관리하기 위한 오픈 소스 기반의 비관계형 데이터베이스 관리 시스템(DBMS)이다. 
+2009년 살바토르 산필리포(Salvatore Sanfilippo)가 처음 개발했다. 2015년부터 Redis Labs가 지원하고 있다. 모든 데이터를 메모리로 불러와서 처리하는 메모리 기반 DBMS 이다.
+BSD 라이선스를 따른다. DB-Engines.com의 월간 랭킹에 따르면, 레디스는 가장 인기 있는 키-값 저장소이다.
 
 ## redis-cli 명령어
 
@@ -65,3 +67,5 @@ redis-cli FLUSHALL
 https://freeblogger.tistory.com/10
 
 https://m.blog.naver.com/newwodudrj/221376339003
+
+https://ko.wikipedia.org/wiki/%EB%A0%88%EB%94%94%EC%8A%A4
