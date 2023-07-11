@@ -16,6 +16,14 @@ containers:
     memory: 4Gi
 ```
 
+- 현재 리소스 사용량을 보여주는 명령어
+
+```
+kubectl top pods
+kubectl top pods --containers
+kubectl top nodes
+```
+
 ## pod 의 메모리 설정 시 주의사항
 
 ### 1. limit 과 request 를 동일하게 설정하자.
@@ -42,9 +50,14 @@ OS 에서 메모리가 더 필요하면 점수가 가장 높은 프로세스를 
 | Burstable    | min(max(2, 1000)) |
 | BestEffort   | 1000              |
 
-따라서 Pod QOS 클래스를 Guaranteed 로 설정해놓으면 OOM Killer 로 인해서 갑자기 Pod 가 죽는 상황은 발생하지 않는다. 
-(갑자기 죽어버린 Pod 가 있다면 의심해보자.) 개런티드 QOS 에 대해서 공식 매뉴얼을 참고하길 바란다.
+따라서 Pod QOS 클래스를 Guaranteed 로 설정해놓으면 OOM Killer 로 인해서 갑자기 Pod 가 죽는 상황은 발생하지 않는다. (갑자기 죽어버린 Pod 가 있다면 의심해보자.)
 
+
+### 2. Heap Memory 설정
+
+위와 같이 설정해놓았더라도 pod 가 메모리를 효율적으로 사용하기 어렵다. 높은 확률로 메모리의 낭비가 발생하기 때문에 Heap 설정을 살펴보아야 한다. 
+
+JVM 애플리케이션에서 OOM Exception 이 발생한다면 다음과 같은 부분이 잘 설정되었는지 고민해보아야 한다.
 
 ## Reference
 
