@@ -1,20 +1,29 @@
 # 쿠버네티스 pod 의 메모리 세팅 정리 및 주의점
 
-> 참조 페이지에 있는 글을 내 것으로 만드는 중
+Pod 안에서 실행되는 컨테이너가 사용하는 리소스를 제한하지 않으면 Node 의 리소스가 무분별하게 사용될 수 있다. 여러 Pod 가 존재한다면
+Qos 클래스 (BestEffort, Burstable, Guaranteed)에 따라 필요한 만큼의 리소스를 얻지 못할 수도 있다. Requests, Limits 를 모두 설정하지 않았다면
+리소스 할당 순위에서 뒤로 밀려 실행중인 Pod 가 Kill 당할 수도 있다.
 
-k8s deployment yaml 파일 설정이 다음과 비슷한 모양이다.
+다음은 deploy 템플릿에 request 와 limit 을 설정하는 방법이다.
 
 ```yaml
-containers:
-- name: analysis
-  image: b97drbe1.kr.private-ncr.ntruss.com/api_analysis:latest
-  imagePullPolicy: Always
-  resources:
-  limits:
-    memory: 32Gi
-  requests:
-    memory: 4Gi
+apiVersion: v1
+kind: Pod
+metadata:
+  name: play-k8s-app
+spec:
+  containers:
+  - name: analysis
+    image: b97drbe1.kr.private-ncr.ntruss.com/api_analysis:latest
+    imagePullPolicy: Always
+    resources:
+      requests:
+        memory: 4Gi
+      limits:
+        memory: 32Gi
 ```
+
+**리소스 할당은 Pod 에 하는 것이 아닌 Pod 에서 실행되는 각 컨테이너에 할당하는 것이다.**
 
 - 현재 리소스 사용량을 보여주는 명령어
 
@@ -50,7 +59,7 @@ OS 에서 메모리가 더 필요하면 점수가 가장 높은 프로세스를 
 | Burstable    | min(max(2, 1000)) |
 | BestEffort   | 1000              |
 
-따라서 Pod QOS 클래스를 Guaranteed 로 설정해놓으면 OOM Killer 로 인해서 갑자기 Pod 가 죽는 상황은 발생하지 않는다. (갑자기 죽어버린 Pod 가 있다면 의심해보자.)
+따라서 Pod QOS 클래스를 Guaranteed 로 설정해놓으면 OOM Killer 로 인해서 갑자기 Pod 가 죽는 상황은 발생하지 않는다.
 
 
 ### 2. Heap Memory 설정
@@ -62,3 +71,5 @@ JVM 애플리케이션에서 OOM Exception 이 발생한다면 다음과 같은 
 ## Reference
 
 https://findstar.pe.kr/2022/07/10/java-application-memory-size-on-container/
+
+https://effectivesquid.tistory.com/entry/Kubernetes-%EC%BB%A8%ED%85%8C%EC%9D%B4%EB%84%88-%ED%99%98%EA%B2%BD%EC%97%90%EC%84%9C%EC%9D%98-%EC%BB%B4%ED%93%A8%ED%8C%85-%EB%A6%AC%EC%86%8C%EC%8A%A4-%EC%A0%95%EB%B3%B4-%EB%B0%8F-%EC%A0%9C%ED%95%9C
