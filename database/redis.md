@@ -42,6 +42,9 @@ redis-cli type {키}
 
 ## 모든 key 삭제
 redis-cli FLUSHALL
+
+## 명령어 수정
+redis-cli rename-command [command] [command to change]
 ```
 
 
@@ -60,6 +63,16 @@ redis-cli FLUSHALL
 - if value is of type sets -> smembers <key>
 - if value is of type sorted sets -> ZRANGEBYSCORE <key> <min> <max>
 - if value is of type stream -> xread count <count> streams <key> <ID>.
+
+
+#### (error) ERR unknown command 'keys', with args beginning with: '*'
+
+레디스의 보안을 위해 치명적일 수 있는 명령어를 임의의 다른 명령어로 바꿔놓는 경우가 많다.
+대표적으로 FLUSHDB, FLUSHALL, KEYS, CONFIG 가 있다.
+
+예를 들어 KEYS -> HELLO 로 변경하는 경우, ```redis-cli keys *``` 명령어 입력 시 위 에러가 발생한다.
+서버에서 확인이 가능하다면 레디스 설정 파일을 찾아 확인할 수 있다.(리눅스 기준 : /etc/redis.conf)
+
 
 
 ## Reference
