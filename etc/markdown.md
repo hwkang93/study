@@ -321,6 +321,9 @@ github
     ### 안녕하세요!
 </details>
 
+- typora 와 같은 에디터 툴에서는 정상적으로 적용이 되지 않는다.(23/07/17 기준)
+
+
 ## Reference
 
 https://github.com/occidere/TIL/issues/95
