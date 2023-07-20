@@ -40,7 +40,14 @@ Git 으로 관리되는 프로젝트의 모든 버전과 변경 내역이 저장
 원격 저장소의 내용을 복제하여 로컬에서 작업을 시작하는 명령어이다.
 
 
+## Git 프로세스
+
+![git_lifecycle](https://github.com/hwkang93/study/assets/49870384/beed38a1-d6a9-4a22-b600-48b3ee9c13a6)
+
+
 
 ## Reference
 
 ChatGPT
+
+https://git-scm.com/
