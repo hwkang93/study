@@ -124,12 +124,117 @@ update 쿼리가 발생한 것도 볼 수 있다.
 > SQLDelete는 영속성컨텍스트에서 관리되다가 트랜잭션이 끝나고 실제 DB에 쿼리를 보낼때 처리를 해준다고 한다.
 
 
+## @Where
 
-## Soft Delete 의 한계
+Soft Delete 처리된 데이터를 조회하는 경우, 삭제 여부 필드가 false 인 데이터만 조회해야 한다. Entity 를 사용하는 모든 데이터에서 삭제되지 않은 데이터만 조회해야 한다면
+```@Where``` 를 이용할 수 있다.
 
-하지만 실무에서는 ```@SQLDelete``` 나 ```@Where``` 를 잘 사용하지는 않는다. 왜냐하면 삭제된 데이터에 대한 정보를 조회할 일이 빈번하게
-일어나기 때문이다. 그렇기 때문에, ```@SQLDelete``` 나 ```@Where``` 를 사용하는 것 보다는, 번거롭더라도 조회 쿼리마다 삭제 여부 조건을 추가해
-원하는 데이터만 조회하는 것을 권장한다.
+```@Where``` 어노테이션은 Entity 에 기본적으로 적용할 조건을 뜻하는 어노테이션이다. 일반적으로 Soft Delete 에서 사용된다.
+
+아래와 같이 Entity 에 ```@Where``` 어노테이션을 추가하면 Entity 조회 시 디폴트 조건이 추가된다.
+
+```java
+@Entity
+@SQLDelete(sql = "UPDATE shop SET deleted = true WHERE id = ?")
+@Where(clause = "deleted = false")
+public class Shop {
+
+	@Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    
+    private String name;
+    
+    private String address;
+    
+    private boolean deleted = Boolean.FALSE; // 삭제 여부 기본값 false
+}
+```
+
+다음은 Shop Entity 를 findAll 함수를 통해 목록을 호출하는 쿼리이다. findAll 메소드만 호출하더라도 deleted = false 조건이 추가된 걸 확인할 수 있다.
+
+```sql
+    select
+        shop0_.id as id1_11_,
+        shop0_.address as address2_11_,
+        shop0_.deleted as deleted3_11_,
+        shop0_.name as name4_11_ 
+    from
+        shop shop0_ 
+    where
+        (
+            shop0_.deleted = false
+        )
+```
+
+## 상속 관계의 Entity 의 경우
+
+Soft Delete 를 하려는 데 Entity 가 상속 관계인 경우가 있다.
+
+```java
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn
+public abstract class Shop {
+
+}
+```
+
+```java
+@Entity
+@DiscriminatorValue("C")
+public class Restaurant extends Shop {
+
+}
+```
+
+```java
+@Entity
+@DiscriminatorValue("R")
+public class Cafe extends Shop {
+
+}
+```
+
+이런 경우 부모클래스에만 ```@SQLDelete(sql = "UPDATE shop SET deleted = true WHERE id = ?")``` 처리를 해주면 자식 테이블에서는 실제 삭제가 일어나게 된다.
+
+아래와 같이 각 자식 클래스에 ```@OnDelete(action = OnDeleteAction.CASCADE)``` 처리를 해줘서 막아줄 수 있다.
+
+```java
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn
+@SQLDelete(sql = "UPDATE shop SET deleted = true WHERE id = ?")
+public abstract class Shop {
+
+}
+```
+
+```java
+@Entity
+@DiscriminatorValue("C")
+@OnDelete(action = OnDeleteAction.CASCADE)
+public class Restaurant extends Shop {
+
+}
+```
+
+```java
+@Entity
+@DiscriminatorValue("R")
+@OnDelete(action = OnDeleteAction.CASCADE)
+public class Cafe extends Shop {
+
+}
+```
+
+
+## @SQLDelete 와 @Where 의 한계
+
+모든 Entity 에 ```@SQLDelete``` 와 ```@Where``` 어노테이션을 추가하고 삭제되지 않는 데이터만 조회한다면 코드도 깔끔해지고 실수할 여지도 사라지겠지만
+실무에서는 ```@SQLDelete``` 나 ```@Where``` 를 거의 사용하지 않는다. 
+왜냐하면 삭제된 데이터에 대한 정보를 조회하거나, 삭제된 데이터를 포함한 목록을 조회하는 등 디폴트로 추가한 조건을 제외해야 하는 일이 빈번하게 일어나기 때문이다. 
+그렇기 때문에, ```@SQLDelete``` 나 ```@Where``` 를 사용하는 것 보다는, 번거롭더라도 조회 쿼리마다 삭제 여부 조건을 추가해 원하는 데이터만 조회하는 것을 권장한다.
 
 
 ## Reference
