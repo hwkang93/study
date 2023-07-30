@@ -445,3 +445,5 @@ public class UserServiceImpl implements UserService {
 [Moon - AOP : Aspect Oriented Programming 개념](https://gmoon92.github.io/spring/aop/2019/01/15/aspect-oriented-programming-concept.html)
 
 [Bale 의 Devlog - PointCut 표현식과 Advisor 구현](https://woongsin94.tistory.com/325)
+
+https://ojt90902.tistory.com/720
