@@ -38,12 +38,123 @@ application.properties (또는 yml) 파일에 정의된 프로퍼티들을 소�
 
 디폴트 값을 사용하고 싶은 경우 ```@Value(프로퍼티명:디폴트값)``` 의 형태로 입력하면 된다.
 
-다음은 @Value 어노테이션을 사용하는 간단한 예제이다.
 
+## 예제
 
+다음은 @Value 어노테이션을 사용하는 예제이다. @Value 어노테이션을 사용하는 클래스는 반드시 스프링 빈으로 등록되어 있어야 한다.
+예제에서는 @Component 어노테이션을 사용해 클래스를 스프링 빈으로 등록시켜 주고 있다.
 
+### 직접 값 주입
+
+```java
+
+@Component
+public class Example() {
+    
+    @Value("Hello!")
+    private String message;
+    
+    @Value("1.234")
+    private double doubleValue; 
+
+    @Value("1234")
+    private Integer intValue; 
+
+    @Value("true")
+    private boolean boolValue;
+
+    @Value("2000")
+    private long longValue;
+}
+```
+
+### application.properties (yaml) 에서 정의한 값 주입
+
+application.properties 에 다음 값을 정의했다.
+
+```properties
+hello.message=Hello!
+```
+
+```java
+
+@Component
+public class Example() {
+    
+    @Value("${hello.message}")
+    private String message;
+    
+}
+```
+
+### List 주입
+
+```properties
+# application.properties
+my.weekdays=Mon,Tue,Wed,Thu,Fri
+```
+
+```java
+@Component
+public class Example {
+    
+    @Value("${my.weekdays}")
+    private List<String> strList; // injects [Mon, Tue, Wed, Thu, Fri]
+
+    //Providing default value
+    @Value("${my.weekends:Sat,Sun,Fri}")
+    private List<String> strList2; // injec
+}
+```
+
+### Map 주입
+
+```properties
+# application.properties
+database.values={url:'http://127.0.0.1:3306/', db:'mySql', username:'root', password:'root'}
+```
+
+```java
+@Component
+public class Example {
+
+    @Value("#{${database.values: {url: 'http://127.0.0.1:3308/', db: 'mySql', username: 'root', password: ''}}}")
+    private Map<String, String> dbValues;
+
+    @GetMapping("")
+    public Map getDBProps(){
+        return dbValues;
+    }
+    
+}
+```
+
+### 생성자 파라미터 주입
+
+```properties
+# application.properties
+company.name= Scopesuite Pty ltd
+```
+
+```java
+@Service
+public class CompanyService {
+   private String compName;
+   private String location;
+
+   public CompanyService(
+    @Value("${company.name}") String compName,
+    @Value("${company.location:Washington}") String location
+   ) {
+       this.compName = compName;
+       this.location = location;
+   }
+}
+```
 
 ## Reference 
 
 https://mangkyu.tistory.com/167
+
+https://bcp0109.tistory.com/227
 
