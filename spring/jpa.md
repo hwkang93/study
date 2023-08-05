@@ -74,6 +74,15 @@ JPA 는 특정 데이터베이스에 종속되지 않는다.
 2. EntityManagerFactory 클래스를 생성한다.
 3. 필요할 때 EntityManager 를 생성한다.
 
+## 주의점
+
+1. EntityManagerFactory 는 하나만 생성해서 어플리케이션 전체에서 공유해야 한다.
+2. EntityManager 는 쓰레드 간에 공유하면 안된다.
+   - 사용하고 바로 버려야 한다.
+   
+3. JPA 의 모든 데이터 변경은 트랜잭션 안에서 실행된다.
+
+
 ## Reference
 
 
